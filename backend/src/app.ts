@@ -7,15 +7,15 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("ReguTwin Agentic OS Backend is running!");
-})
+  res.send("ReguTwin Agentic OS Backend is running!");
+});
 
 app.get("/api/v1/health", (req, res) => {
-    res.json({
-      status: "ok",
-      message: "ReguTwin Agentic OS Backend is running!",
-      timestamp: new Date().toISOString(),
-    });
-})
+  res.json({
+    status: "ok",
+    message: "ReguTwin Agentic OS Backend is running!",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 export default app;
