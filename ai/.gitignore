@@ -1,0 +1,83 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDEs
+.idea/
+.vscode/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+
+# Type checking
+.pyre/
+.dmypy.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Logs
+logs/
+*.log
+
+# LangChain / LangGraph
+.langgraph/
+checkpoints/
+state/
+memory/
+
+# ChromaDB
+chroma/
+chromadb/
+*.sqlite3
+*.db
+
+# Vector databases
+vector_store/
+vectordb/
+faiss_index/
+storage/
+
+# Model files
+models/
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+
+# Generated AI outputs
+outputs/
+generated/
+artifacts/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets
+secrets/
+credentials.json
+service-account.json
