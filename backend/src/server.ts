@@ -1,10 +1,14 @@
 import app from "./app.js";
-import dotenv from "dotenv";
+import { connectDB } from "./config/database.js";
+import { env } from "./config/env.js";
+import { logger } from "./utils/logger.js";
 
-dotenv.config();
+const startServer = async (): Promise<void> => {
+  await connectDB();
 
-const PORT = process.env.PORT || 3000;
+  app.listen(env.PORT, () => {
+    logger.info(`Server running in ${env.NODE_ENV} mode on port ${env.PORT}`);
+  });
+};
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+startServer();
