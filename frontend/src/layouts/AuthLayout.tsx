@@ -1,39 +1,42 @@
 import { Outlet } from 'react-router-dom';
 
 /* ============================================
-   AuthLayout — Split design with gradient panel
-   Matches the reference: gradient left + form right
+   AuthLayout — Split centered card design
+   Matches the mockup reference: gradient left + form right
    ============================================ */
 export default function AuthLayout() {
   return (
-    <div className="auth-container">
-      {/* Left Gradient Panel */}
-      <div className="auth-gradient-panel">
-        <div className="auth-gradient-bg" />
-        <div className="auth-blob auth-blob-1" />
-        <div className="auth-blob auth-blob-2" />
-        <div className="auth-blob auth-blob-3" />
+    <div className="page-center-wrapper">
+      <div className="auth-card">
+        {/* Left Gradient Panel */}
+        <div className="auth-gradient-panel">
+          <div className="auth-gradient-bg" />
 
-        {/* Top icon */}
-        <div className="auth-panel-content" style={{ position: 'absolute', top: '48px', left: '48px' }}>
-          <span className="brand-icon brand-icon-white">✦</span>
+          {/* Top brand symbol (white asterisk) */}
+          <div className="auth-panel-content">
+            <span className="brand-asterisk-white">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2V22" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
+                <path d="M3.33975 7L20.6603 17" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
+                <path d="M3.33975 17L20.6603 7" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
+              </svg>
+            </span>
+          </div>
+
+          {/* Bottom branding messaging */}
+          <div className="auth-panel-content">
+            <p className="auth-panel-bottom-text">You can easily</p>
+            <h2 className="auth-panel-title">
+              Deploy AI agents to monitor, analyze, and automate compliance
+            </h2>
+          </div>
         </div>
 
-        {/* Bottom text */}
-        <div className="auth-panel-content">
-          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '12px', fontWeight: 400 }}>
-            You can easily
-          </p>
-          <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#fff', lineHeight: 1.3, maxWidth: '320px' }}>
-            Streamline your regulatory compliance with AI-powered intelligence
-          </h2>
-        </div>
-      </div>
-
-      {/* Right Form Panel */}
-      <div className="auth-form-panel">
-        <div className="auth-form-wrapper fade-in">
-          <Outlet />
+        {/* Right Form Panel */}
+        <div className="auth-form-panel">
+          <div className="auth-form-wrapper fade-in">
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>
