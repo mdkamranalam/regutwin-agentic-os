@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from agents.analyst.analyst_agent import analyze_regulation
-from agents.analyst.schemas import RegulationAnalysis
+from agents.analyst import analyze_regulation
+from schemas.analysis import RegulationAnalysis
 
 app = FastAPI(title="ReguTwin AI Bridge")
 
