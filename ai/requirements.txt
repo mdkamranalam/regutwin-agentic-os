@@ -4,3 +4,7 @@ ollama
 pydantic
 json-repair
 python-dotenv
+watchdog
+schedule
+requests
+beautifulsoup4
