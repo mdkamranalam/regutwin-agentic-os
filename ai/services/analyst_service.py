@@ -1,4 +1,7 @@
-from agents.analyst.schemas import (AnalysisResult)
+from agents.analyst.analyst_agent import AnalystAgent
+from agents.analyst.schemas import (
+    AnalysisResult
+)
 
 VALID_RISKS = {
     "LOW",
@@ -6,6 +9,7 @@ VALID_RISKS = {
     "HIGH",
     "CRITICAL"
 }
+
 
 class AnalystService:
 
