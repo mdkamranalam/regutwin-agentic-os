@@ -1,16 +1,18 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-
-from services.analyst_service import AnalystService
+from services.analyst_service import (AnalystService)
 
 router = APIRouter()
 
-class RegulationRequest(BaseModel):
+class RequestBody(BaseModel):
+    regulationId: str
     text: str
 
 @router.post("/analyze")
-def analyze(req: RegulationRequest):
+def analyze(req: RequestBody):
+    result = (AnalystService.process(req.text))
 
-    result = AnalystService.process(req.text)
-
-    return result
+    return {
+        "regulationId": req.regulationId,
+        "analysis": result
+    }
