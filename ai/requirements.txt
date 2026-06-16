@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+ollama
+pydantic
+json-repair
+python-dotenv
