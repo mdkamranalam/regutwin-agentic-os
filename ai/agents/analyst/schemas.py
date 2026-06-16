@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from enum import Enum
 
 class RiskLevel(str, Enum):
@@ -8,9 +8,12 @@ class RiskLevel(str, Enum):
     HIGH = "HIGH"
     CRITICAL = "CRITICAL"
 
+class Obligation(BaseModel):
+    description: str
+    deadline: Optional[str] = None
 
 class AnalysisResult(BaseModel):
-    obligations: List[str]
+    obligations: List[Obligation]
     deadlines: List[str]
     affectedSystems: List[str]
     policyChanges: List[str]
