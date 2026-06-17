@@ -40,9 +40,28 @@ Regulatory Sources (RBI / SEBI / PDFs / Portals)
 - Governance and audit trails
 - Real-time compliance dashboard
 
+## Docker Setup
+
+The entire ReguTwin Agentic OS is fully Dockerized, allowing you to run the Frontend, Backend, and AI Layer together seamlessly.
+
+### Prerequisites
+- Docker & Docker Compose
+- [Ollama](https://ollama.com/) running locally on your host machine (with the `llama3.1:8b` model pulled).
+
+### Running the Application
+1. Start your local Ollama instance.
+2. In the root directory, build and start the containers:
+   ```bash
+   docker-compose up --build
+   ```
+3. Access the services:
+   - **Frontend:** http://localhost:5173
+   - **Backend API:** http://localhost:8000
+   - **AI Layer API:** http://localhost:8001
+
 ## Technology Stack
 
-- React.js
+- React.js (Vite, TailwindCSS)
 - Node.js
 - Express.js
 - LangGraph

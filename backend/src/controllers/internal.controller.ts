@@ -15,7 +15,7 @@ export const saveAnalysis = async (req: Request, res: Response) => {
 
   regulation.analysis = analysis;
 
-  regulation.status = "ANALYZED";
+  regulation.status = "ANALYZED" as any;
 
   await regulation.save();
 

@@ -9,4 +9,5 @@ schedule
 requests
 beautifulsoup4
 pdfplumber
-requests
+langchain
+langchain-ollama

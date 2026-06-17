@@ -14,6 +14,7 @@ export interface IRegulation extends Document {
   extractedText: string;
   publishedDate?: Date;
   status: RegulationStatus;
+  analysis?: any;
 }
 
 const RegulationSchema = new Schema<IRegulation>(

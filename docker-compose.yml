@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - regutwin-network
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - NODE_ENV=production
+      - FRONTEND_URL=http://localhost:5173
+      - AI_SERVICE_URL=http://ai:8001
+    depends_on:
+      - ai
+    networks:
+      - regutwin-network
+
+  ai:
+    build:
+      context: ./ai
+    ports:
+      - "8001:8001"
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=llama3.1:8b
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - regutwin-network
+
+networks:
+  regutwin-network:
+    driver: bridge

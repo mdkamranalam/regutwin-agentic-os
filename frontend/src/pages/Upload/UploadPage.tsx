@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect, type DragEvent, type ChangeEvent } from 'react';
+import { useState, useRef, useCallback, type DragEvent, type ChangeEvent } from 'react';
 import type { UploadedFile, UploadStatus } from '../../types/upload';
 
 /* ============================================
@@ -69,7 +69,7 @@ export default function UploadPage() {
       // Import api dynamically or add to top
       const { default: api } = await import('../../services/api');
 
-      const response = await api.post('/regulations/upload', formData, {
+      await api.post('/regulations/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           // Note: Add auth token here if authentication is enabled

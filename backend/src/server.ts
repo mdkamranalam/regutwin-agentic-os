@@ -6,7 +6,7 @@ import { logger } from "./config/logger.js";
 const startServer = async (): Promise<void> => {
   await connectDB();
 
-  app.listen(env.PORT, () => {
+  app.listen(Number(env.PORT), "0.0.0.0", () => {
     logger.info(`Server running in ${env.NODE_ENV} mode on port ${env.PORT}`);
   });
 };
