@@ -22,14 +22,40 @@ export const uploadRegulation = async (req: Request, res: Response) => {
   });
 
   try {
-    // 2. Analyze the regulation via AI Layer
+    // 2. Run the full LangGraph Workflow
     const { AIService } = await import("../services/ai.service.js");
-    const analysisResult = await AIService.analyze(regulation.id, extractedText);
+    const workflowResult = await AIService.runWorkflow(regulation.id, extractedText, regulation.title, regulation.source);
     
-    // 3. Update the regulation with analysis and set status to ANALYZED
-    regulation.analysis = analysisResult;
+    // 3. Extract results and save
+    regulation.analysis = workflowResult.analysis;
+    
+    let conflicts = [];
+    if (workflowResult.conflicts && workflowResult.conflicts.conflicts) {
+      conflicts = workflowResult.conflicts.conflicts.map((c: any) => ({
+        regulationId: c.conflicting_regulation_id,
+        title: c.conflicting_title,
+        explanation: c.explanation,
+      }));
+    }
+    regulation.conflicts = conflicts;
+    
+    // 4. Update status and save
     regulation.status = "ANALYZED" as any;
     await regulation.save();
+    
+    // Create MAPs in the backend from the workflow result
+    if (workflowResult.maps && workflowResult.maps.maps) {
+      const { default: MAP, MapStatus } = await import("../models/map.model.js");
+      for (const m of workflowResult.maps.maps) {
+        await MAP.create({
+          regulationId: regulation.id,
+          description: m.description,
+          assignedTo: m.assignedTo,
+          actionRequired: m.actionRequired,
+          status: MapStatus.OPEN
+        });
+      }
+    }
   } catch (error) {
     console.error("AI Analysis failed", error);
     // Keep status as NEW if AI fails

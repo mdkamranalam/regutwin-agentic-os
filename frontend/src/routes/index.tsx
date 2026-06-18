@@ -5,6 +5,8 @@ import LoginPage from '../pages/Login/LoginPage';
 import SignupPage from '../pages/Signup/SignupPage';
 import UploadPage from '../pages/Upload/UploadPage';
 import RegulationsPage from '../pages/Regulations/RegulationsPage';
+import MapDashboard from '../pages/MAPs/MapDashboard';
+import AuditDashboard from '../pages/Governance/AuditDashboard';
 
 /* ============================================
    Application Routes
@@ -26,8 +28,9 @@ export const router = createBrowserRouter([
     element: <DashboardLayout />,
     children: [
       { path: 'upload', element: <UploadPage /> },
-      { path: 'dashboard', element: <PlaceholderPage title="Dashboard" message="The compliance dashboard will be built here." /> },
+      { path: 'maps', element: <MapDashboard /> },
       { path: 'regulations', element: <RegulationsPage /> },
+      { path: 'audits', element: <AuditDashboard /> },
       { path: 'validation', element: <PlaceholderPage title="Validation" message="Validation results will be built here." /> },
       { index: true, element: <Navigate to="upload" replace /> },
     ],

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
+import { io } from 'socket.io-client';
+
+import ConflictWarning from '../../components/ConflictWarning';
 
 interface Obligation {
   requirement: string;
@@ -12,11 +15,18 @@ interface Deadline {
   date: string;
 }
 
+interface Conflict {
+  regulationId: string;
+  title: string;
+  explanation: string;
+}
+
 interface Regulation {
   _id: string;
   title: string;
   source: string;
   status: string;
+  conflicts?: Conflict[];
   analysis?: {
     title?: string;
     summary?: string;
@@ -28,9 +38,17 @@ interface Regulation {
   };
 }
 
+interface WorkflowUpdate {
+  regulationId: string;
+  node: string;
+  status: string;
+  timestamp: string;
+}
+
 export default function RegulationsPage() {
   const [regulations, setRegulations] = useState<Regulation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updates, setUpdates] = useState<WorkflowUpdate[]>([]);
 
   useEffect(() => {
     const fetchRegulations = async () => {
@@ -45,6 +63,26 @@ export default function RegulationsPage() {
     };
 
     fetchRegulations();
+
+    // Setup Socket.IO connection
+    const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:3000');
+    
+    socket.on('workflow_update', (data: WorkflowUpdate) => {
+      setUpdates(prev => {
+        // Keep only last 5 updates
+        const next = [data, ...prev];
+        return next.slice(0, 5);
+      });
+      
+      // If a node completed, maybe refresh regulations to see new data
+      if (data.node === 'generate_maps' && data.status === 'COMPLETED') {
+        fetchRegulations();
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   if (loading) {
@@ -59,6 +97,25 @@ export default function RegulationsPage() {
           <p className="text-[var(--color-surface-300)]">Monitor active regulations and AI-extracted obligations.</p>
         </div>
       </div>
+      
+      {updates.length > 0 && (
+        <div className="mb-8 p-4 bg-white/5 border border-white/10 rounded-xl">
+          <h3 className="text-sm font-semibold text-white mb-3">Live Workflow Updates</h3>
+          <div className="space-y-2">
+            {updates.map((upd, idx) => (
+              <div key={idx} className="flex justify-between items-center text-xs">
+                <span className="text-[var(--color-surface-300)]">
+                  Regulation: <span className="text-white font-mono">{upd.regulationId.slice(-6)}</span>
+                </span>
+                <span className="text-[var(--color-surface-200)] font-medium">Node: {upd.node}</span>
+                <span className={`px-2 py-1 rounded ${upd.status === 'COMPLETED' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                  {upd.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {regulations.length === 0 ? (
         <div className="text-center py-20 bg-white/5 border border-white/10 rounded-2xl">
@@ -86,6 +143,10 @@ export default function RegulationsPage() {
 
               {reg.analysis?.summary && (
                 <p className="text-[var(--color-surface-300)] mb-6 text-sm">{reg.analysis.summary}</p>
+              )}
+              
+              {reg.conflicts && reg.conflicts.length > 0 && (
+                <ConflictWarning conflicts={reg.conflicts} />
               )}
 
               {reg.analysis && reg.analysis.obligations && reg.analysis.obligations.length > 0 && (

@@ -15,6 +15,11 @@ export interface IRegulation extends Document {
   publishedDate?: Date;
   status: RegulationStatus;
   analysis?: any;
+  conflicts?: {
+    regulationId: string;
+    title: string;
+    explanation: string;
+  }[];
 }
 
 const RegulationSchema = new Schema<IRegulation>(
@@ -62,6 +67,14 @@ const RegulationSchema = new Schema<IRegulation>(
         type: String,
       },
     },
+
+    conflicts: [
+      {
+        regulationId: String,
+        title: String,
+        explanation: String,
+      }
+    ],
 
     status: {
       type: String,

@@ -23,3 +23,11 @@ export const saveAnalysis = async (req: Request, res: Response) => {
     success: true,
   });
 };
+
+import { broadcastWorkflowUpdate } from "../utils/socket.js";
+
+export const postWorkflowUpdate = async (req: Request, res: Response) => {
+  const { regulationId, node, status, payload } = req.body;
+  broadcastWorkflowUpdate(regulationId, node, status, payload);
+  res.json({ success: true });
+};
