@@ -1,102 +1,183 @@
-# ReguTwin Agentic OS
+# ReguTwin Agentic OS 🤖📜
 
-ReguTwin Agentic OS is an Autonomous Regulatory Intelligence and Compliance Operating System that helps banks transform manual compliance workflows into AI-driven, real-time, proof-based regulatory operations.
+![ReguTwin Banner](https://via.placeholder.com/1000x200.png?text=ReguTwin+Agentic+OS+-+Autonomous+Compliance)
 
-## Problem
+> An Autonomous Regulatory Intelligence and Compliance Operating System designed to help banks transform manual compliance workflows into AI-driven, real-time, proof-based regulatory operations.
 
-Banks continuously receive regulatory updates from authorities such as RBI and SEBI. Most compliance workflows still rely on emails, spreadsheets, manual interpretation, and delayed implementation tracking, resulting in:
+---
 
-- Compliance gaps
-- Increased audit risks
-- Slow implementation cycles
-- Operational inefficiencies
-- Poor visibility into compliance status
+## 📖 Table of Contents
+1. [The Problem](#-the-problem)
+2. [The Solution](#-the-solution)
+3. [Architecture Overview](#-architecture-overview)
+4. [Agentic Workflow (LangGraph)](#-agentic-workflow-langgraph)
+5. [Key Features](#-key-features)
+6. [Tech Stack](#-tech-stack)
+7. [Getting Started (Docker)](#-getting-started-docker)
+8. [Running Locally (Without Docker)](#-running-locally-without-docker)
+9. [Project Structure](#-project-structure)
 
-## Solution
+---
 
-ReguTwin uses autonomous AI agents to continuously monitor regulations, extract compliance obligations, generate measurable action points, detect regulatory conflicts, assign ownership, and validate implementation through automated testing.
+## 🚨 The Problem
 
-## Architecture
+Financial institutions continuously receive complex regulatory updates from authorities (e.g., RBI, SEBI). Traditionally, compliance workflows rely on manual interpretation, emails, and spreadsheets, resulting in:
+*   **Compliance Gaps:** Missed nuances in dense regulatory texts.
+*   **Increased Audit Risks:** Lack of clear, traceable proof of compliance.
+*   **Slow Implementation:** Delayed action due to inter-departmental friction.
+*   **Inefficiencies:** High operational overhead for regulatory mapping.
 
-Regulatory Sources (RBI / SEBI / PDFs / Portals)
-→ Watchman Agent
-→ Analyst Agent
-→ MAP Generation Engine
-→ Semantic Conflict Engine
-→ Mapper Agent
-→ Validation Agent
-→ Governance & Audit Layer
-→ Compliance Dashboard
+---
 
-## Key Features
+## 💡 The Solution
 
-- Real-time regulatory monitoring
-- AI-powered regulation analysis
-- Measurable Action Point (MAP) generation
-- Department ownership mapping
-- Semantic conflict detection
-- Autonomous compliance validation
-- Proof-based verification
-- Governance and audit trails
-- Real-time compliance dashboard
+**ReguTwin** leverages a swarm of specialized, autonomous AI agents to:
+1. **Monitor** for new regulations.
+2. **Extract** atomic compliance obligations and deadlines.
+3. **Generate** Measurable Action Points (MAPs) and assign ownership.
+4. **Detect Conflicts** across historical and concurrent regulations using Vector Search.
+5. **Validate** implementation automatically using an AI Auditor.
 
-## Docker Setup
+---
 
-The entire ReguTwin Agentic OS is fully Dockerized, allowing you to run the Frontend, Backend, and AI Layer together seamlessly.
+## 🏛️ Architecture Overview
+
+The system is comprised of three main interconnected services:
+
+1. **Frontend (React + Vite)**: A stunning, real-time dashboard displaying active regulations, compliance maps, conflict warnings, and audit trails.
+2. **Backend (Node + Express + MongoDB)**: The core API and state manager, persisting MAPs, regulations, and managing websocket connections.
+3. **AI Layer (Python + FastAPI + LangGraph + ChromaDB)**: The brain of the operation, executing complex multi-agent workflows using local open-weights LLMs (Llama 3).
+
+---
+
+## 🧠 Agentic Workflow (LangGraph)
+
+The AI layer utilizes **LangGraph** to orchestrate a deterministic, stateful graph of specialized agents:
+
+1. **Watchman Agent**: Ingests incoming regulatory PDFs and triggers the LangGraph flow.
+2. **Analyst Agent (`extract_obligations`)**: Parses dense text to extract discrete obligations, deadlines, and risk levels.
+3. **Conflict Engine (`detect_conflicts_node`)**: Queries **ChromaDB** to find semantically similar historical obligations. Uses the LLM to identify active contradictions and flags them to the user.
+4. **MAP Generator (`generate_maps_node`)**: Converts obligations into step-by-step Measurable Action Points (MAPs) and routes them to the correct department (IT Security, Risk, Legal, Compliance, Finance).
+5. **Validator Agent**: Operates asynchronously to grade user-submitted evidence against a MAP, passing or failing the compliance action.
+
+All transitions in the LangGraph emit real-time Socket.IO events to the frontend, allowing users to watch the AI's "thought process" live.
+
+---
+
+## ✨ Key Features
+
+- **Real-time Regulatory Ingestion:** Automated text extraction from complex PDFs.
+- **Semantic Conflict Detection:** Instantly flags if a new regulation contradicts an existing one.
+- **Departmental Routing:** Auto-assigns compliance tasks to the correct stakeholders.
+- **Live Workflow Dashboard:** Watch the AI orchestrate tasks in real-time via WebSockets.
+- **Autonomous Audit Engine:** AI-graded evidence verification with comprehensive, immutable audit trails.
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+- React 19, Vite
+- TailwindCSS v4
+- React Router DOM
+- Socket.io-client
+
+**Backend:**
+- Node.js, Express.js
+- MongoDB & Mongoose (Cloud Atlas)
+- Socket.IO
+- Zod (Validation)
+
+**AI Layer:**
+- Python 3.11, FastAPI
+- LangGraph & LangChain
+- Ollama (`llama3.1:8b`)
+- ChromaDB (Persistent Vector Store)
+- pdfplumber
+
+---
+
+## 🐳 Getting Started (Docker)
+
+The entire ReguTwin Agentic OS is fully Dockerized, allowing you to spin up the Frontend, Backend, and AI Layer seamlessly with one command.
 
 ### Prerequisites
-- Docker & Docker Compose
-- [Ollama](https://ollama.com/) running locally on your host machine (with the `llama3.1:8b` model pulled).
+1. **Docker & Docker Compose** installed.
+2. **Ollama** running locally on your host machine.
+    * Install [Ollama](https://ollama.com/).
+    * Pull the model: `ollama run llama3.1:8b`
+    * Ensure the Ollama server is running.
 
-### Running the Application
-1. Start your local Ollama instance.
-2. In the root directory, build and start the containers:
+### Spin up the environment
+1. Clone the repository and navigate to the root directory.
+2. Build and start the containers:
    ```bash
    docker-compose up --build
    ```
 3. Access the services:
-   - **Frontend:** http://localhost:5173
-   - **Backend API:** http://localhost:8000
-   - **AI Layer API:** http://localhost:8001
+   * **Frontend Dashboard:** http://localhost:5173
+   * **Backend API:** http://localhost:8000
+   * **AI Microservice:** http://localhost:8001
 
-## Technology Stack
+*(Note: The AI container automatically routes its LLM requests to your host machine's Ollama instance via `host.docker.internal`.)*
 
-- React.js (Vite, TailwindCSS)
-- Node.js
-- Express.js
-- LangGraph
-- OpenAI / Gemini APIs
-- ChromaDB
-- MongoDB
+---
 
-## Example Workflow
+## 💻 Running Locally (Without Docker)
 
-1. Watchman Agent detects a new RBI circular.
-2. Analyst Agent extracts obligations, deadlines, risks, and impacted systems.
-3. MAP Engine generates actionable compliance tasks.
-4. Conflict Engine identifies contradictory regulatory requirements.
-5. Mapper Agent assigns tasks to relevant departments.
-6. Validation Agent verifies implementation through automated testing.
-7. Dashboard provides real-time compliance visibility and audit evidence.
+If you prefer to run the services individually for development:
 
-## Expected Impact
+### 1. Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-ReguTwin enables banks to:
+### 2. Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- Reduce regulatory response time
-- Improve compliance accuracy
-- Detect policy conflicts early
-- Minimize audit risks
-- Strengthen governance and cybersecurity compliance
+### 3. AI Layer
+```bash
+cd ai
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
 
-## Future Scope
+---
 
-- Multi-regulator support
-- Automated evidence collection
-- Continuous compliance monitoring
-- Predictive compliance risk scoring
-- Enterprise integrations
+## 📁 Project Structure
 
-## License
+```text
+regutwin-agentic-os/
+├── ai/
+│   ├── agents/          # Specialized AI modules (Analyst, Mapper, Validator, Conflict Engine)
+│   ├── schemas/         # Pydantic schemas for structured LLM outputs
+│   ├── vector_db/       # ChromaDB persistent client implementation
+│   ├── workflows/       # LangGraph state definitions
+│   └── main.py          # FastAPI entry point
+├── backend/
+│   ├── src/
+│   │   ├── controllers/ # Express route controllers
+│   │   ├── models/      # Mongoose schemas (Regulation, MAP, Audit)
+│   │   ├── routes/      # API endpoints
+│   │   └── utils/       # Socket.IO broadcasting logic
+├── frontend/
+│   ├── src/
+│   │   ├── components/  # Reusable UI elements (ConflictWarnings, Toasters)
+│   │   ├── pages/       # Dashboard pages (MAPs, Audits, Regulations)
+│   │   └── services/    # Axios and Socket.IO API clients
+└── docker-compose.yml   # Multi-container orchestration
+```
+
+---
+
+## 📜 License
 
 This project is licensed under the MIT License.
