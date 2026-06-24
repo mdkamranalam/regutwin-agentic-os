@@ -108,24 +108,17 @@ export default function UploadPage() {
         {['PDF', 'DOCX', 'TXT', 'CSV'].map(fmt => (
           <span
             key={fmt}
-            className="text-xs font-semibold px-2.5 py-1 rounded-full"
-            style={{ background: 'rgba(99,102,241,0.1)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.2)' }}
+            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
           >
             {fmt}
           </span>
         ))}
-        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>• Max 500 MB</span>
+        <span className="text-xs text-white/30">• Max 500 MB</span>
       </div>
 
       {/* Drop zone */}
       <div
-        className={`relative rounded-2xl transition-all duration-200 cursor-pointer glass-card-hover ${isDragOver ? 'scale-[1.01] !border-indigo-500 !bg-indigo-500/10' : ''}`}
-        style={{
-          borderStyle: 'dashed',
-          borderWidth: '2px',
-          padding: '48px 32px',
-          textAlign: 'center',
-        }}
+        className={`relative rounded-2xl transition-all duration-200 cursor-pointer glass-card-hover border-2 border-dashed border-white/20 p-12 text-center ${isDragOver ? 'scale-[1.01] !border-indigo-500 !bg-indigo-500/10' : ''}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -143,8 +136,7 @@ export default function UploadPage() {
         />
         <div className="flex flex-col items-center gap-4">
           <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center"
-            style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.25)' }}
+            className="w-16 h-16 rounded-2xl flex items-center justify-center bg-indigo-500/15 border border-indigo-500/25"
           >
             <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#818cf8" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -152,12 +144,11 @@ export default function UploadPage() {
           </div>
           <div>
             <p className="text-white font-bold text-base">Drop your file here</p>
-            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse</p>
+            <p className="text-sm mt-1 text-white/40">or click to browse</p>
           </div>
           <button
             type="button"
-            className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all"
-            style={{ background: 'rgba(99,102,241,0.15)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.3)' }}
+            className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/25"
             onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
           >
             Browse Files
@@ -170,7 +161,7 @@ export default function UploadPage() {
         <span className="text-lg mt-0.5">🤖</span>
         <div>
           <p className="text-sm font-semibold text-white">Autonomous AI Pipeline</p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="text-xs mt-1 text-white/50">
             Once uploaded, the Watchman Agent detects the document, the Analyst extracts obligations,
             the Conflict Engine checks for contradictions, and MAPs are auto-generated for each department.
           </p>
@@ -180,7 +171,7 @@ export default function UploadPage() {
       {/* File list */}
       {files.length > 0 && (
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <p className="text-xs font-semibold uppercase tracking-wider text-white/30">
             Uploads ({files.length})
           </p>
           {files.map((file) => {
@@ -195,31 +186,30 @@ export default function UploadPage() {
                   <p className="text-sm font-semibold text-white truncate">{file.name}</p>
                   {file.status === 'uploading' ? (
                     <div className="mt-2">
-                      <div className="flex justify-between text-xs mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                      <div className="flex justify-between text-xs mb-1 text-white/40">
                         <span>Uploading & analyzing...</span>
                         <span>{Math.round(file.progress)}%</span>
                       </div>
-                      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.07)' }}>
+                      <div className="h-1.5 rounded-full overflow-hidden bg-white/10">
                         <div
-                          className="h-full rounded-full transition-all duration-300"
-                          style={{ width: `${file.progress}%`, background: 'linear-gradient(90deg, #6366f1, #8b5cf6)' }}
+                          className="h-full rounded-full transition-all duration-300 bg-gradient-to-r from-indigo-500 to-violet-500"
+                          style={{ width: `${file.progress}%` }}
                         />
                       </div>
                     </div>
                   ) : file.status === 'success' ? (
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                      <span className="text-xs font-medium" style={{ color: '#10b981' }}>Analysed & MAPs generated</span>
-                      <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>· {formatFileSize(file.size)}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span className="text-xs font-medium text-emerald-500">Analysed & MAPs generated</span>
+                      <span className="text-xs text-white/30">· {formatFileSize(file.size)}</span>
                     </div>
                   ) : (
-                    <p className="text-xs mt-1" style={{ color: '#ef4444' }}>✕ {file.error}</p>
+                    <p className="text-xs mt-1 text-red-500">✕ {file.error}</p>
                   )}
                 </div>
-                <button
+                  <button
                   onClick={() => removeFile(file.id)}
-                  className="p-1.5 rounded-lg transition-colors"
-                  style={{ color: 'rgba(255,255,255,0.3)' }}
+                  className="p-1.5 rounded-lg transition-colors text-white/30 hover:text-white hover:bg-white/5"
                 >
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -233,10 +223,9 @@ export default function UploadPage() {
 
       {/* Navigate to MAPs after success */}
       {hasSuccess && (
-        <button
+          <button
           onClick={() => navigate('/maps')}
-          className="w-full py-3 rounded-xl text-sm font-bold transition-all"
-          style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white' }}
+          className="w-full py-3 rounded-xl text-sm font-bold transition-all bg-gradient-to-br from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-lg shadow-indigo-500/25"
         >
           View Generated MAPs →
         </button>

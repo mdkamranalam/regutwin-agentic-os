@@ -112,8 +112,7 @@ export default function RegulationsPage() {
           </p>
         </div>
         <div
-          className="px-3 py-1.5 rounded-full text-xs font-bold"
-          style={{ background: 'rgba(99,102,241,0.1)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.2)' }}
+          className="px-3 py-1.5 rounded-full text-xs font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
         >
           {regulations.length} Documents
         </div>
@@ -122,8 +121,7 @@ export default function RegulationsPage() {
       {/* Live workflow feed */}
       {updates.length > 0 && (
         <div
-          className="rounded-2xl p-4"
-          style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)' }}
+          className="rounded-2xl p-4 bg-indigo-500/5 border border-indigo-500/15"
         >
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
@@ -153,12 +151,11 @@ export default function RegulationsPage() {
 
       {regulations.length === 0 ? (
         <div
-          className="text-center py-20 rounded-2xl"
-          style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.1)' }}
+          className="text-center py-20 rounded-2xl bg-white/5 border border-dashed border-white/10"
         >
           <p className="text-5xl mb-4">📜</p>
           <p className="text-white font-semibold mb-1">No regulations analyzed yet</p>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <p className="text-sm text-white/40">
             Upload a document to start the autonomous analysis pipeline.
           </p>
         </div>
@@ -173,8 +170,7 @@ export default function RegulationsPage() {
             return (
               <div
                 key={reg._id}
-                className="rounded-2xl overflow-hidden transition-all"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+                className="rounded-2xl overflow-hidden transition-all glass-panel hover:bg-white/5"
               >
                 {/* Card header — always visible */}
                 <div
@@ -204,8 +200,8 @@ export default function RegulationsPage() {
                       <h2 className="text-base font-bold text-white leading-snug">
                         {reg.analysis?.title || reg.title}
                       </h2>
-                      <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                        Source: {reg.source} · Status: <span style={{ color: '#818cf8' }}>{reg.status}</span>
+                      <p className="text-xs mt-1 text-white/40">
+                        Source: {reg.source} · Status: <span className="text-indigo-400">{reg.status}</span>
                       </p>
                     </div>
                     <svg
@@ -217,7 +213,7 @@ export default function RegulationsPage() {
                     </svg>
                   </div>
                   {reg.analysis?.summary && (
-                    <p className="text-sm mt-3 leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    <p className="text-sm mt-3 leading-relaxed line-clamp-2 text-white/50">
                       {reg.analysis.summary}
                     </p>
                   )}
@@ -225,7 +221,7 @@ export default function RegulationsPage() {
 
                 {/* Expanded detail */}
                 {isExpanded && (
-                  <div className="px-5 pb-5 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                  <div className="px-5 pb-5 border-t border-white/10">
                     {conflictCount > 0 && reg.conflicts && (
                       <div className="mt-4">
                         <ConflictWarning conflicts={reg.conflicts} />
@@ -234,19 +230,18 @@ export default function RegulationsPage() {
 
                     {reg.analysis?.obligations && reg.analysis.obligations.length > 0 && (
                       <div className="mt-5">
-                        <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                        <p className="text-xs font-bold uppercase tracking-wider mb-3 text-white/40">
                           Extracted Obligations ({reg.analysis.obligations.length})
                         </p>
                         <div className="space-y-2">
                           {reg.analysis.obligations.map((ob, idx) => (
                             <div
                               key={idx}
-                              className="flex items-start justify-between gap-3 p-3 rounded-xl"
-                              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+                              className="flex items-start justify-between gap-3 p-3 rounded-xl bg-white/5 border border-white/10"
                             >
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium text-white leading-snug">{ob.requirement}</p>
-                                <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>{ob.category}</p>
+                                <p className="text-xs mt-1 text-white/40">{ob.category}</p>
                               </div>
                               <PriorityBadge priority={ob.priority} />
                             </div>
@@ -257,15 +252,14 @@ export default function RegulationsPage() {
 
                     {reg.analysis?.affectedDepartments && reg.analysis.affectedDepartments.length > 0 && (
                       <div className="mt-4">
-                        <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                        <p className="text-xs font-bold uppercase tracking-wider mb-2 text-white/40">
                           Affected Departments
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {reg.analysis.affectedDepartments.map((dept, idx) => (
                             <span
                               key={idx}
-                              className="text-xs font-medium px-2.5 py-1 rounded-full"
-                              style={{ background: 'rgba(99,102,241,0.1)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.2)' }}
+                              className="text-xs font-medium px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
                             >
                               🏢 {dept}
                             </span>

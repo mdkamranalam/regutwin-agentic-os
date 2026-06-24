@@ -92,7 +92,7 @@ body {
   justify-content: center;
   min-height: 100vh;
   padding: 40px 24px;
-  background-color: #f3f2fa;
+  background-color: #000000;
 }
 
 /* ============================================
@@ -103,12 +103,14 @@ body {
   display: flex;
   width: 940px;
   max-width: 100%;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: 28px;
   box-shadow: 
-    0 24px 48px -18px rgba(79, 70, 229, 0.08), 
-    0 1px 3px rgba(0, 0, 0, 0.02),
-    0 10px 30px -10px rgba(0, 0, 0, 0.04);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+    0 24px 48px -18px rgba(0, 0, 0, 0.5);
   padding: 16px;
   overflow: hidden;
   position: relative;
@@ -188,7 +190,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 32px 48px;
-  background: #ffffff;
+  background: transparent;
 }
 
 .auth-form-wrapper {
@@ -199,14 +201,14 @@ body {
 /* Right Panel Brand Symbol (Indigo Asterisk) */
 .brand-asterisk-color {
   display: inline-flex;
-  color: var(--color-indigo-600);
+  color: #818cf8;
 }
 
 /* Headings */
 .auth-title {
   font-size: 28px;
   font-weight: 700;
-  color: var(--color-gray-900);
+  color: #ffffff;
   letter-spacing: -0.02em;
 }
 
@@ -222,7 +224,7 @@ body {
   display: block;
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-gray-700);
+  color: var(--color-gray-300);
   margin-bottom: 6px;
 }
 
@@ -230,9 +232,9 @@ body {
   width: 100%;
   padding: 11px 14px;
   font-size: 14px;
-  color: var(--color-gray-900);
-  background: #ffffff;
-  border: 1px solid var(--color-gray-200);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   outline: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -308,7 +310,7 @@ body {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--color-gray-100);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .divider-text {
@@ -329,18 +331,18 @@ body {
   align-items: center;
   justify-content: center;
   height: 40px;
-  background: #f3f4f6; /* grey backgrounds from mockup */
-  border: none;
-  border-radius: 50px; /* pill style shapes */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--color-gray-700);
+  color: #ffffff;
   font-weight: 500;
   font-size: 13.5px;
 }
 
 .social-btn:hover {
-  background: #e5e7eb;
+  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-0.5px);
 }
 
@@ -378,11 +380,14 @@ body {
 .upload-page-card {
   width: 560px;
   max-width: 100%;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: 24px;
   box-shadow: 
-    0 20px 40px -15px rgba(0, 0, 0, 0.06), 
-    0 1px 3px rgba(0, 0, 0, 0.02);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+    0 20px 40px -15px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   transition: all 0.3s ease;
 }
@@ -392,7 +397,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 24px;
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .upload-header-left {
@@ -415,7 +420,7 @@ body {
 .upload-header-title {
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-gray-900);
+  color: #ffffff;
 }
 
 .upload-header-subtitle {
@@ -448,13 +453,13 @@ body {
 
 /* Dashed drag & drop zone */
 .upload-dropzone {
-  border: 2px dashed var(--color-gray-200);
+  border: 2px dashed rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   padding: 40px 24px;
   text-align: center;
   cursor: pointer;
   transition: all 0.25s ease;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.02);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -464,7 +469,7 @@ body {
 .upload-dropzone:hover,
 .upload-dropzone.drag-over {
   border-color: var(--color-indigo-400);
-  background: var(--color-accent-50)/15;
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .upload-dropzone-btn {
@@ -474,24 +479,23 @@ body {
   padding: 8px 16px;
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--color-gray-700);
-  background: #ffffff;
-  border: 1px solid var(--color-gray-200);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .upload-dropzone-btn:hover {
   border-color: var(--color-indigo-500);
-  color: var(--color-indigo-600);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .upload-dropzone-text {
   font-size: 14px;
   font-weight: 700;
-  color: var(--color-gray-800);
+  color: #ffffff;
   margin-top: 16px;
 }
 
@@ -514,15 +518,15 @@ body {
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  background: #ffffff;
-  border: 1px solid var(--color-gray-200);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   transition: all 0.2s ease;
 }
 
 .file-row-card:hover {
-  border-color: var(--color-indigo-200);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.03);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .file-pdf-icon-box {
@@ -549,7 +553,7 @@ body {
 .file-name-title {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--color-gray-800);
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -711,10 +715,10 @@ body {
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 8px;
-  color: #dc2626;
+  color: #fca5a5;
   font-size: 13px;
   line-height: 1.4;
 }

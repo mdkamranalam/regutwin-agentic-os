@@ -13,11 +13,11 @@ interface Audit {
   validationResult?: { is_valid: boolean; confidence: number; feedback: string };
 }
 
-const ACTION_COLORS: Record<string, { color: string; bg: string; icon: string }> = {
-  CREATED:        { color: '#818cf8', bg: 'rgba(99,102,241,0.1)', icon: '➕' },
-  UPDATED:        { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', icon: '✏️' },
-  STATUS_CHANGED: { color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', icon: '🔄' },
-  VALIDATED:      { color: '#10b981', bg: 'rgba(16,185,129,0.1)', icon: '🔬' },
+const ACTION_COLORS: Record<string, { textClass: string; bgClass: string; borderClass: string; icon: string }> = {
+  CREATED:        { textClass: 'text-indigo-400', bgClass: 'bg-indigo-500/10', borderClass: 'border-indigo-500/30', icon: '➕' },
+  UPDATED:        { textClass: 'text-amber-500', bgClass: 'bg-amber-500/10', borderClass: 'border-amber-500/30', icon: '✏️' },
+  STATUS_CHANGED: { textClass: 'text-blue-500', bgClass: 'bg-blue-500/10', borderClass: 'border-blue-500/30', icon: '🔄' },
+  VALIDATED:      { textClass: 'text-emerald-500', bgClass: 'bg-emerald-500/10', borderClass: 'border-emerald-500/30', icon: '🔬' },
 };
 
 export default function AuditDashboard() {
@@ -58,13 +58,12 @@ export default function AuditDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-white">Governance & Audit Trail</h1>
-          <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="text-sm mt-1 text-white/40">
             Immutable compliance activity log — every AI decision recorded
           </p>
         </div>
         <div
-          className="px-3 py-1.5 rounded-full text-xs font-bold"
-          style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)' }}
+          className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
         >
           {audits.length} Records
         </div>
@@ -76,12 +75,7 @@ export default function AuditDashboard() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className="text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
-            style={{
-              background: filter === f ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.05)',
-              color: filter === f ? '#818cf8' : 'rgba(255,255,255,0.45)',
-              border: filter === f ? '1px solid rgba(99,102,241,0.4)' : '1px solid rgba(255,255,255,0.08)',
-            }}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${filter === f ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/40' : 'bg-white/5 text-white/40 border border-white/10'}`}
           >
             {f.replace('_', ' ')}
           </button>
@@ -90,12 +84,11 @@ export default function AuditDashboard() {
 
       {filtered.length === 0 ? (
         <div
-          className="text-center py-20 rounded-2xl"
-          style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.1)' }}
+          className="text-center py-20 rounded-2xl bg-white/5 border border-dashed border-white/10"
         >
           <p className="text-5xl mb-4">🛡️</p>
           <p className="text-white font-semibold mb-1">No audit records</p>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <p className="text-sm text-white/40">
             Compliance events will appear here as the system processes regulations.
           </p>
         </div>
@@ -106,41 +99,39 @@ export default function AuditDashboard() {
             return (
               <div
                 key={audit._id}
-                className="rounded-2xl p-5"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+                className="rounded-2xl p-5 glass-panel"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span
-                      className="text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5"
-                      style={{ background: ac.bg, color: ac.color, border: `1px solid ${ac.color}30` }}
+                      className={`text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border ${ac.bgClass} ${ac.textClass} ${ac.borderClass}`}
                     >
                       {ac.icon} {audit.action.replace('_', ' ')}
                     </span>
                   </div>
-                  <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <span className="text-xs font-mono text-white/30">
                     {new Date(audit.createdAt).toLocaleString()}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                  <div className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Regulation</p>
+                  <div className="p-3 rounded-xl bg-white/5">
+                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1 text-white/30">Regulation</p>
                     <p className="text-sm font-medium text-white">{audit.regulationId?.title || 'Unknown'}</p>
-                    <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{audit.regulationId?.source}</p>
+                    <p className="text-xs mt-0.5 text-white/40">{audit.regulationId?.source}</p>
                   </div>
-                  <div className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>MAP Task</p>
+                  <div className="p-3 rounded-xl bg-white/5">
+                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1 text-white/30">MAP Task</p>
                     <p className="text-sm font-medium text-white">{audit.mapId?.actionRequired || 'Unknown'}</p>
-                    <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{audit.mapId?.assignedTo}</p>
+                    <p className="text-xs mt-0.5 text-white/40">{audit.mapId?.assignedTo}</p>
                   </div>
                 </div>
 
                 {(audit.previousStatus || audit.newStatus) && (
                   <div className="flex items-center gap-2 text-sm mb-3">
-                    <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Status:</span>
+                    <span className="text-xs text-white/40">Status:</span>
                     {audit.previousStatus && (
-                      <span className="px-2 py-0.5 rounded text-xs font-semibold line-through" style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444' }}>
+                      <span className="px-2 py-0.5 rounded text-xs font-semibold line-through bg-red-500/10 text-red-500">
                         {audit.previousStatus}
                       </span>
                     )}
@@ -150,7 +141,7 @@ export default function AuditDashboard() {
                       </svg>
                     )}
                     {audit.newStatus && (
-                      <span className="px-2 py-0.5 rounded text-xs font-semibold" style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981' }}>
+                      <span className="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-500">
                         {audit.newStatus}
                       </span>
                     )}
@@ -159,21 +150,17 @@ export default function AuditDashboard() {
 
                 {audit.validationResult && (
                   <div
-                    className="p-4 rounded-xl"
-                    style={{
-                      background: audit.validationResult.is_valid ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)',
-                      border: `1px solid ${audit.validationResult.is_valid ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`,
-                    }}
+                    className={`p-4 rounded-xl border ${audit.validationResult.is_valid ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-red-500/10 border-red-500/20'}`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-xs font-bold" style={{ color: audit.validationResult.is_valid ? '#10b981' : '#ef4444' }}>
+                      <h4 className={`text-xs font-bold ${audit.validationResult.is_valid ? 'text-emerald-500' : 'text-red-500'}`}>
                         🔬 AI Validation {audit.validationResult.is_valid ? 'PASSED' : 'FAILED'}
                       </h4>
-                      <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                      <span className="text-xs font-semibold text-white/50">
                         Confidence: {audit.validationResult.confidence}%
                       </span>
                     </div>
-                    <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    <p className="text-sm leading-relaxed text-white/70">
                       {audit.validationResult.feedback}
                     </p>
                   </div>

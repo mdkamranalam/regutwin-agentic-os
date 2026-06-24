@@ -32,17 +32,12 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
 
   return (
     <div
-      className="fixed bottom-6 right-6 z-50 flex items-start gap-3 p-4 rounded-2xl shadow-2xl max-w-sm fade-in"
-      style={{
-        background: type === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
-        border: `1px solid ${type === 'success' ? 'rgba(16,185,129,0.4)' : 'rgba(239,68,68,0.4)'}`,
-        backdropFilter: 'blur(20px)',
-      }}
+      className={`fixed bottom-6 right-6 z-50 flex items-start gap-3 p-4 rounded-2xl shadow-2xl max-w-sm fade-in backdrop-blur-xl ${type === 'success' ? 'bg-emerald-500/15 border border-emerald-500/40' : 'bg-red-500/15 border border-red-500/40'}`}
     >
       <span className="text-xl mt-0.5">{type === 'success' ? '✅' : '❌'}</span>
       <div className="flex-1">
         <p className="text-sm font-semibold text-white">{type === 'success' ? 'Validation Passed' : 'Validation Failed'}</p>
-        <p className="text-xs mt-1 line-clamp-4" style={{ color: 'rgba(255,255,255,0.65)' }}>{message}</p>
+        <p className="text-xs mt-1 line-clamp-4 text-white/60">{message}</p>
       </div>
       <button onClick={onClose} className="text-white/40 hover:text-white/80 transition-colors text-sm mt-0.5">✕</button>
     </div>
@@ -105,15 +100,15 @@ export default function MapDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-white">MAP Dashboard</h1>
-          <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="text-sm mt-1 text-white/40">
             Measurable Action Points — Assigned & Tracked
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="px-3 py-1.5 rounded-full text-xs font-bold" style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }}>
+          <div className="px-3 py-1.5 rounded-full text-xs font-bold bg-red-500/10 text-red-500 border border-red-500/20">
             {openCount} Open
           </div>
-          <div className="px-3 py-1.5 rounded-full text-xs font-bold" style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)' }}>
+          <div className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
             {closedCount} Closed
           </div>
         </div>
@@ -121,12 +116,11 @@ export default function MapDashboard() {
 
       {maps.length === 0 ? (
         <div
-          className="text-center py-20 rounded-2xl"
-          style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.1)' }}
+          className="text-center py-20 rounded-2xl bg-white/5 border border-dashed border-white/10"
         >
           <p className="text-5xl mb-4">📋</p>
           <p className="text-white font-semibold mb-1">No MAPs generated yet</p>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <p className="text-sm text-white/40">
             Upload a regulatory document to automatically generate MAPs.
           </p>
         </div>
@@ -137,25 +131,19 @@ export default function MapDashboard() {
             return (
               <div
                 key={map._id}
-                className="rounded-2xl p-5 transition-all"
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                }}
+                className="rounded-2xl p-5 transition-all glass-panel"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1 min-w-0 mr-4">
                     <h2 className="text-base font-bold text-white mb-1 leading-snug">{map.actionRequired}</h2>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span
-                        className="text-xs font-medium px-2 py-0.5 rounded-full"
-                        style={{ background: 'rgba(99,102,241,0.15)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.3)' }}
+                        className="text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-400 border border-indigo-500/30"
                       >
                         📁 {map.regulationId?.title || 'Unknown Regulation'}
                       </span>
                       <span
-                        className="text-xs font-medium px-2 py-0.5 rounded-full"
-                        style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.1)' }}
+                        className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/5 text-white/60 border border-white/10"
                       >
                         🏢 {map.assignedTo}
                       </span>
@@ -171,12 +159,7 @@ export default function MapDashboard() {
                     <select
                       value={map.status}
                       onChange={(e) => handleStatusChange(map._id, e.target.value)}
-                      className="text-xs font-medium rounded-lg px-2 py-1.5 outline-none cursor-pointer"
-                      style={{
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        color: 'rgba(255,255,255,0.7)',
-                      }}
+                      className="text-xs font-medium rounded-lg px-2 py-1.5 outline-none cursor-pointer bg-white/5 border border-white/10 text-white/70"
                     >
                       <option value="OPEN">OPEN</option>
                       <option value="IN_PROGRESS">IN PROGRESS</option>
@@ -187,7 +170,7 @@ export default function MapDashboard() {
                 </div>
 
                 {map.description && (
-                  <p className="text-sm mb-4 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <p className="text-sm mb-4 leading-relaxed text-white/50">
                     {map.description}
                   </p>
                 )}
