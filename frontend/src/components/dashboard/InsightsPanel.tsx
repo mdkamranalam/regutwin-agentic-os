@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, ShieldAlert, FileText, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldAlert, FileText, AlertTriangle } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 export function InsightsPanel() {

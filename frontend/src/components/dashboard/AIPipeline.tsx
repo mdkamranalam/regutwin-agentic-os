@@ -46,7 +46,7 @@ export function AIPipeline() {
             transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
           />
 
-          {AGENTS.map((agent, idx) => {
+          {AGENTS.map((agent) => {
             const isActive = agent.status === 'Active';
             const isWaiting = agent.status === 'Waiting';
 

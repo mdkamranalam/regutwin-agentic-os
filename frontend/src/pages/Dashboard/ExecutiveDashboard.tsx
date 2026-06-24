@@ -7,6 +7,7 @@ import { InsightsPanel } from '../../components/dashboard/InsightsPanel';
 import { AIPipeline } from '../../components/dashboard/AIPipeline';
 import { AlertCircle, FileText, CheckCircle2, RefreshCw, Layers, Bell, Calendar, ShieldCheck, Clock } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend } from 'recharts';
+import { cn } from '../../utils/cn';
 
 interface HealthMetrics {
   healthScore: number;
