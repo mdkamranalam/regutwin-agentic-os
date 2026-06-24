@@ -1,53 +1,47 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import NotificationCenter from '../components/NotificationCenter';
+import { 
+  LayoutDashboard, UploadCloud, Library, ListTodo, ClipboardCheck, 
+  Eye, BrainCircuit, Zap, Stethoscope, 
+  History, BarChart3, Settings,
+  Search, Bot, Activity, ChevronDown, Menu, X, ShieldCheck
+} from 'lucide-react';
+import { cn } from '../utils/cn';
 
-const NAV_ITEMS = [
+const NAV_GROUPS = [
   {
-    label: 'Dashboard',
-    path: '/dashboard',
-    icon: (
-      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    ),
+    title: 'Overview',
+    items: [
+      { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    ]
   },
   {
-    label: 'Upload Regulation',
-    path: '/upload',
-    icon: (
-      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-      </svg>
-    ),
+    title: 'Compliance Operations',
+    items: [
+      { label: 'Upload Regulations', path: '/upload', icon: UploadCloud },
+      { label: 'Regulations Library', path: '/regulations', icon: Library },
+      { label: 'MAP Tasks', path: '/maps', icon: ListTodo },
+      { label: 'Reviews', path: '/reviews', icon: ClipboardCheck },
+    ]
   },
   {
-    label: 'Regulations',
-    path: '/regulations',
-    icon: (
-      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-    ),
+    title: 'AI Agents',
+    items: [
+      { label: 'Watchman', path: '/agents/watchman', icon: Eye },
+      { label: 'Analyst', path: '/agents/analyst', icon: BrainCircuit },
+      { label: 'Conflict Engine', path: '/agents/conflict', icon: Zap },
+      { label: 'Validator', path: '/agents/validator', icon: Stethoscope },
+    ]
   },
   {
-    label: 'MAP Tasks',
-    path: '/maps',
-    icon: (
-      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Audit Governance',
-    path: '/audits',
-    icon: (
-      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-      </svg>
-    ),
-  },
+    title: 'Governance',
+    items: [
+      { label: 'Audit Trail', path: '/audits', icon: History },
+      { label: 'Reports', path: '/reports', icon: BarChart3 },
+      { label: 'Settings', path: '/settings', icon: Settings },
+    ]
+  }
 ];
 
 export default function DashboardLayout() {
@@ -55,129 +49,132 @@ export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#0f0f1a' }}>
+    <div className="min-h-screen flex text-slate-300 bg-[#09090b]">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`
-          fixed lg:sticky top-0 h-screen flex flex-col w-[240px] z-50
-          transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        `}
-        style={{
-          background: 'rgba(18, 18, 36, 0.97)',
-          borderRight: '1px solid rgba(255,255,255,0.07)',
-          backdropFilter: 'blur(20px)',
-        }}
+        className={cn(
+          'fixed lg:sticky top-0 h-screen flex flex-col w-[260px] z-50 glass-sidebar',
+          'transition-transform duration-300 ease-in-out',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        )}
       >
-        {/* Logo */}
-        <Link to="/dashboard" className="flex items-center gap-3 px-6 py-5 border-b border-white/5">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-lg flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
-          >
-            R
+        {/* Workspace Switcher */}
+        <div className="p-4 border-b border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-500/20 border border-emerald-500/30 text-emerald-400">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <p className="text-white font-bold text-sm leading-tight tracking-wide">Global Bank Inc</p>
+              <p className="text-[10px] font-medium text-emerald-400">Premium Enterprise</p>
+            </div>
           </div>
-          <div>
-            <p className="text-white font-bold text-sm leading-tight">ReguTwin</p>
-            <p className="text-[10px] font-medium uppercase tracking-widest" style={{ color: '#6366f1' }}>
-              Agentic OS
-            </p>
-          </div>
-        </Link>
+          <ChevronDown size={16} className="text-gray-500" />
+        </div>
 
-        {/* Nav */}
-        <nav className="flex flex-col gap-1 flex-1 px-3 py-4 overflow-y-auto">
-          <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-2" style={{ color: 'rgba(255,255,255,0.25)' }}>
-            Navigation
-          </p>
-          {NAV_ITEMS.map((item) => {
-            const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150"
-                style={{
-                  color: isActive ? '#ffffff' : 'rgba(255,255,255,0.45)',
-                  background: isActive ? 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.15))' : 'transparent',
-                  border: isActive ? '1px solid rgba(99,102,241,0.3)' : '1px solid transparent',
-                }}
-              >
-                <span style={{ color: isActive ? '#818cf8' : 'rgba(255,255,255,0.3)' }}>{item.icon}</span>
-                {item.label}
-              </Link>
-            );
-          })}
+        {/* Search Command Bar (Fake) */}
+        <div className="px-4 py-3">
+          <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-black/20 border border-white/10 text-gray-400 text-xs hover:bg-white/5 transition-colors">
+            <Search size={14} />
+            <span className="flex-1 text-left">Search commands...</span>
+            <kbd className="hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/10 text-[10px] font-mono">
+              ⌘K
+            </kbd>
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-6">
+          {NAV_GROUPS.map((group, gIdx) => (
+            <div key={gIdx}>
+              <p className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                {group.title}
+              </p>
+              <div className="space-y-0.5">
+                {group.items.map((item) => {
+                  const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setSidebarOpen(false)}
+                      className={cn(
+                        'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                        isActive 
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]' 
+                          : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                      )}
+                    >
+                      <Icon size={16} className={cn(isActive ? 'text-emerald-400' : 'text-gray-500')} />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
-        {/* Bottom: Notifications + User */}
-        <div className="px-3 py-4 border-t border-white/5 space-y-3">
-          <div className="flex items-center justify-between px-3">
-            <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>Alerts</span>
-            <NotificationCenter />
-          </div>
-          <div
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
-          >
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
-            >
-              B
-            </div>
+        {/* User Profile Card */}
+        <div className="p-4 border-t border-white/5">
+          <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors">
+            <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8B93&color=fff&rounded=true" alt="User" className="w-9 h-9 rounded-full border border-white/10" />
             <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-semibold truncate">Bank Admin</p>
-              <p className="text-[10px] truncate" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                compliance@bank.com
-              </p>
+              <p className="text-white text-sm font-bold truncate">Sarah Jenkins</p>
+              <p className="text-[11px] text-gray-500 truncate">Chief Compliance Officer</p>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 overflow-y-auto min-h-screen">
-        {/* Mobile top bar */}
-        <header
-          className="lg:hidden sticky top-0 z-30 flex items-center justify-between px-4 py-3"
-          style={{
-            background: 'rgba(15,15,26,0.95)',
-            borderBottom: '1px solid rgba(255,255,255,0.07)',
-            backdropFilter: 'blur(12px)',
-          }}
-        >
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg"
-            style={{ background: 'rgba(255,255,255,0.06)' }}
-          >
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-black text-sm"
-              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+      {/* Main content area */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Bar */}
+        <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 glass-header border-b border-white/10">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 -ml-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5"
             >
-              R
+              <Menu size={20} />
+            </button>
+            <div className="hidden md:flex items-center gap-2 text-sm text-gray-400">
+              <span>Workspace</span>
+              <span className="text-gray-600">/</span>
+              <span className="text-white font-medium">Dashboard</span>
             </div>
-            <span className="text-white font-bold text-sm">ReguTwin</span>
           </div>
-          <NotificationCenter />
+
+          <div className="flex items-center gap-4">
+            {/* AI Assistant Button */}
+            <button className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold border border-indigo-500/20 hover:bg-indigo-500/20 transition-colors">
+              <Bot size={14} />
+              Ask AI
+            </button>
+
+            {/* System Health */}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20 cursor-help" title="All Systems Operational">
+              <Activity size={14} />
+              <span className="hidden sm:inline">99.9% Uptime</span>
+            </div>
+
+            <div className="w-px h-5 bg-white/10 mx-1" />
+
+            <NotificationCenter />
+          </div>
         </header>
 
-        <div className="p-6 lg:p-8">
+        {/* Scrollable Page Content */}
+        <div className="flex-1 overflow-y-auto p-6 lg:p-8">
           <Outlet />
         </div>
       </main>

@@ -119,10 +119,10 @@ export default function UploadPage() {
 
       {/* Drop zone */}
       <div
-        className={`relative rounded-2xl transition-all duration-200 cursor-pointer ${isDragOver ? 'scale-[1.01]' : ''}`}
+        className={`relative rounded-2xl transition-all duration-200 cursor-pointer glass-card-hover ${isDragOver ? 'scale-[1.01] !border-indigo-500 !bg-indigo-500/10' : ''}`}
         style={{
-          background: isDragOver ? 'rgba(99,102,241,0.08)' : 'rgba(255,255,255,0.03)',
-          border: `2px dashed ${isDragOver ? 'rgba(99,102,241,0.6)' : 'rgba(255,255,255,0.1)'}`,
+          borderStyle: 'dashed',
+          borderWidth: '2px',
           padding: '48px 32px',
           textAlign: 'center',
         }}
@@ -166,10 +166,7 @@ export default function UploadPage() {
       </div>
 
       {/* AI pipeline hint */}
-      <div
-        className="flex items-start gap-3 p-4 rounded-xl"
-        style={{ background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.15)' }}
-      >
+      <div className="flex items-start gap-3 p-4 rounded-xl glass-panel border border-emerald-500/20 bg-emerald-500/5">
         <span className="text-lg mt-0.5">🤖</span>
         <div>
           <p className="text-sm font-semibold text-white">Autonomous AI Pipeline</p>
@@ -191,8 +188,7 @@ export default function UploadPage() {
             return (
               <div
                 key={file.id}
-                className="flex items-center gap-4 p-4 rounded-xl"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+                className="flex items-center gap-4 p-4 rounded-xl glass-panel"
               >
                 <FileIcon ext={ext} />
                 <div className="flex-1 min-w-0">
