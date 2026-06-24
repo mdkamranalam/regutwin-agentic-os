@@ -41,26 +41,26 @@ export default function LandingPage() {
         </nav>
 
         {/* Hero Section */}
-        <div className="pt-24 pb-20 md:pt-32 md:pb-28 text-center max-w-4xl mx-auto">
-          <motion.div initial="hidden" animate="visible" variants={stagger}>
+        <div className="pt-16 pb-12 md:pt-24 md:pb-16 text-center mx-auto flex flex-col items-center">
+          <motion.div initial="hidden" animate="visible" variants={stagger} className="flex flex-col items-center w-full">
             <motion.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-xs font-medium text-gray-300 tracking-wide uppercase">ReguTwin OS v1.0</span>
             </motion.div>
             
-            <motion.h1 variants={fadeIn} className="text-4xl md:text-6xl font-bold tracking-tight leading-tight mb-6 text-white drop-shadow-sm">
+            <motion.h1 variants={fadeIn} className="text-5xl md:text-[64px] font-extrabold tracking-tight leading-[1.1] mb-6 text-white drop-shadow-sm max-w-5xl text-center">
               Automate Regulatory <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-200 to-indigo-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-cyan-300 to-indigo-400">
                 Compliance Intelligence
               </span>
             </motion.h1>
             
-            <motion.p variants={fadeIn} className="text-lg text-gray-300 font-medium mb-10 max-w-2xl mx-auto leading-relaxed">
+            <motion.p variants={fadeIn} className="text-lg md:text-xl text-gray-400 font-medium mb-10 max-w-2xl mx-auto leading-relaxed text-center">
               The first multi-agent operating system designed for enterprise compliance. 
               Watchman, Analyst, and Conflict Engine agents orchestrate your regulatory posture in real-time.
             </motion.p>
             
-            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
               <Link 
                 to="/dashboard" 
                 className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-black font-semibold hover:scale-105 transition-transform flex items-center justify-center gap-2"
@@ -82,7 +82,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative max-w-5xl mx-auto group perspective-[2000px]"
+          className="relative max-w-5xl mx-auto group perspective-[2000px] mb-20 md:mb-32"
         >
           {/* Outer glow */}
           <div className="absolute -inset-1 bg-gradient-to-b from-indigo-500/20 to-transparent rounded-3xl blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
@@ -106,7 +106,7 @@ export default function LandingPage() {
         </motion.div>
 
         {/* Features / Agents Section */}
-        <div className="py-24 md:py-32">
+        <div className="py-16 md:py-24">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-semibold tracking-tight mb-4">Powered by Agentic Workflows</h2>
             <p className="text-gray-400 font-medium">A sophisticated ecosystem of autonomous AI agents working in concert.</p>
@@ -151,11 +151,11 @@ export default function LandingPage() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
-    <div className="glass-card-hover p-8 group flex flex-col">
-      <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mb-6 transition-all group-hover:scale-110 group-hover:bg-white/10">
+    <div className="glass-card-hover p-8 group flex flex-col h-full bg-white/[0.02] border border-white/10 rounded-2xl">
+      <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 transition-all group-hover:scale-110 group-hover:bg-white/10">
         {icon}
       </div>
-      <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
+      <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
       <p className="text-gray-400 leading-relaxed text-sm font-medium">
         {description}
       </p>
