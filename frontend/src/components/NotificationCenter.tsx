@@ -13,9 +13,18 @@ interface Alert {
 export default function NotificationCenter() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:8000');
+    const socket = io(import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:8000', {
+      reconnectionAttempts: 5,
+      reconnectionDelay: 2000,
+    });
+
+    socket.on('connect', () => setIsConnected(true));
+    socket.on('disconnect', () => setIsConnected(false));
+    socket.on('connect_error', () => setIsConnected(false));
+
     socket.on('new_alert', (alert: Alert) => {
       setAlerts(prev => [{ ...alert, read: false }, ...prev]);
     });
@@ -26,11 +35,22 @@ export default function NotificationCenter() {
   const markAllRead = () => setAlerts(prev => prev.map(a => ({ ...a, read: true })));
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center gap-3">
+      {/* Connection Status Indicator */}
+      <div 
+        className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium border ${
+          isConnected ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-red-500/10 border-red-500/20 text-red-500'
+        }`}
+        title={isConnected ? "AI Bridge Connected" : "AI Bridge Disconnected"}
+      >
+        <span className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+        {isConnected ? 'Connected' : 'Reconnecting...'}
+      </div>
+
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-xl transition-colors"
-        style={{ background: isOpen ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.05)' }}
+        className="relative p-2 rounded-xl transition-colors glass-panel"
+        style={{ background: isOpen ? 'rgba(99,102,241,0.15)' : '' }}
         title="Notifications"
       >
         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.6)" strokeWidth={2}>
@@ -51,13 +71,8 @@ export default function NotificationCenter() {
           {/* backdrop */}
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           <div
-            className="absolute right-0 mt-2 w-80 rounded-2xl shadow-2xl overflow-hidden z-50"
-            style={{
-              background: 'rgba(15,15,26,0.97)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              backdropFilter: 'blur(20px)',
-              top: '100%',
-            }}
+            className="absolute right-0 mt-2 w-80 rounded-2xl shadow-2xl overflow-hidden z-50 glass-panel"
+            style={{ top: '100%' }}
           >
             <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
               <p className="text-sm font-bold text-white">Alerts</p>
