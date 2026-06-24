@@ -29,9 +29,7 @@ export function KPICard({ title, value, icon, trend, trendLabel, className, colo
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       className={cn(
-        'relative overflow-hidden rounded-2xl p-5 border',
-        'bg-white/5 border-white/10 backdrop-blur-xl',
-        'shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]',
+        'relative overflow-hidden p-5 glass-panel',
         className
       )}
     >
@@ -81,9 +79,7 @@ export function RadialKPICard({ score, previousScore }: { score: number, previou
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       className={cn(
-        'relative overflow-hidden rounded-2xl p-6 border col-span-1 lg:col-span-1 flex flex-col items-center justify-center',
-        'bg-white/5 border-white/10 backdrop-blur-xl',
-        'shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]'
+        'relative overflow-hidden p-6 glass-panel col-span-1 lg:col-span-1 flex flex-col items-center justify-center'
       )}
     >
       <div className={cn('absolute inset-0 opacity-10 pointer-events-none', colors.bg)} />
