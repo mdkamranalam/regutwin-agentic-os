@@ -1,160 +1,345 @@
-import { motion, type Variants } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ShieldCheck, Eye, BrainCircuit, Zap, ArrowRight, Code, Server, Lock } from 'lucide-react';
-
-const fadeIn: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
-};
-
-const stagger: Variants = {
-  visible: { transition: { staggerChildren: 0.1 } }
-};
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+  ShieldCheck,
+  Eye,
+  BrainCircuit,
+  Zap,
+  ArrowRight,
+  CheckCircle2,
+  Database,
+  Server,
+  Lock,
+} from "lucide-react";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-white selection:bg-indigo-500/30 font-sans flex flex-col">
-      {/* Background gradients */}
-      <div className="fixed inset-0 z-0 flex justify-center pointer-events-none">
-        <div className="w-full max-w-7xl h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-[#09090b] to-[#09090b]" />
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-cyan-500/10 blur-[180px]" />
+        <div className="absolute bottom-0 right-0 w-[700px] h-[500px] bg-emerald-500/10 blur-[180px]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 flex-1 flex flex-col">
-        {/* Navigation */}
-        <nav className="flex items-center justify-between py-6">
-          <div className="flex items-center gap-3 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-white border border-white/10 group-hover:bg-white/10 transition-all">
-              <ShieldCheck size={20} />
-            </div>
-            <span className="text-lg font-bold tracking-tight text-white">ReguTwin</span>
+      {/* Navbar */}
+      <nav className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+            <ShieldCheck size={20} />
           </div>
-          <div className="flex items-center gap-6">
-            <Link to="/auth/login" className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">
-              Log in
-            </Link>
-            <Link 
-              to="/dashboard" 
-              className="px-4 py-2 rounded-lg bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-            >
-              Dashboard
-            </Link>
-          </div>
-        </nav>
 
-        {/* Hero Section */}
-        <div className="pt-12 pb-10 md:pt-20 md:pb-16 text-center flex flex-col items-center">
-          <motion.div initial="hidden" animate="visible" variants={stagger} className="flex flex-col items-center w-full max-w-4xl mx-auto">
-            <motion.div variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-6">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-              <span className="text-xs font-bold text-gray-300 tracking-wider uppercase">ReguTwin OS v1.0</span>
-            </motion.div>
-            
-            <motion.h1 variants={fadeIn} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6 text-white text-balance">
-              Automate Regulatory <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400">Compliance Intelligence</span>
-            </motion.h1>
-            
-            <motion.p variants={fadeIn} className="text-base md:text-lg text-gray-400 font-medium mb-8 max-w-2xl mx-auto leading-relaxed text-balance">
-              The first multi-agent operating system designed for enterprise compliance. 
-              Watchman, Analyst, and Conflict Engine agents orchestrate your regulatory posture in real-time.
-            </motion.p>
-            
-            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-              <Link 
-                to="/dashboard" 
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-black font-bold hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
-              >
-                Launch Dashboard <ArrowRight size={18} />
-              </Link>
-              <Link 
-                to="/auth/login" 
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-colors"
-              >
-                Book Demo
-              </Link>
-            </motion.div>
-          </motion.div>
+          <span className="font-bold text-xl">ReguTwin</span>
         </div>
 
-        {/* High-Fidelity Dashboard Preview */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+        <div className="hidden md:flex items-center gap-8 text-sm text-zinc-400">
+          <a href="#architecture">Architecture</a>
+          <a href="#agents">Agents</a>
+          <a href="#dashboard">Dashboard</a>
+          <a href="#metrics">Metrics</a>
+        </div>
+
+        <div className="flex gap-3">
+          <Link
+            to="/auth/login"
+            className="text-sm text-zinc-400 hover:text-white"
+          >
+            Login
+          </Link>
+
+          <Link
+            to="/dashboard"
+            className="px-4 py-2 rounded-xl bg-white text-black font-semibold"
+          >
+            Launch
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 pt-20 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative max-w-5xl mx-auto w-full mb-16 md:mb-24"
         >
-          {/* Main Dashboard Frame */}
-          <div className="relative rounded-2xl p-1 border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md">
-            <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 to-transparent rounded-2xl opacity-50" />
-            <div className="rounded-xl overflow-hidden bg-[#09090b] relative border border-white/5">
-              {/* Browser-like top bar */}
-              <div className="h-10 border-b border-white/5 bg-white/[0.02] flex items-center px-4 gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <div className="w-3 h-3 rounded-full bg-green-500/80" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 mb-8">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs uppercase tracking-widest">
+              ReguTwin OS v1.0
+            </span>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-[-0.05em] leading-none">
+            Autonomous
+            <br />
+            <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              Regulatory Intelligence
+            </span>
+          </h1>
+
+          <p className="max-w-3xl mx-auto mt-8 text-zinc-400 text-lg md:text-xl leading-relaxed">
+            Transform compliance operations with autonomous agents that monitor
+            regulations, analyze obligations, detect conflicts, validate
+            implementation, and maintain audit-ready governance.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
+            <Link
+              to="/dashboard"
+              className="px-8 py-4 rounded-xl bg-white text-black font-bold flex items-center justify-center gap-2"
+            >
+              Launch Dashboard
+              <ArrowRight size={18} />
+            </Link>
+
+            <button className="px-8 py-4 rounded-xl border border-white/10 bg-white/5">
+              Book Demo
+            </button>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Trust Bar */}
+      <section className="max-w-7xl mx-auto px-6 py-16">
+        <div className="flex flex-wrap justify-center gap-10 text-zinc-500 text-sm uppercase tracking-widest">
+          <span>SOC2 Ready</span>
+          <span>RBI Monitoring</span>
+          <span>SEBI Monitoring</span>
+          <span>Audit Trails</span>
+          <span>Conflict Detection</span>
+          <span>AI Powered</span>
+        </div>
+      </section>
+
+      {/* Dashboard */}
+      <section
+        id="dashboard"
+        className="max-w-[1400px] mx-auto px-6 pb-32"
+      >
+        <div className="relative">
+          <div className="absolute inset-0 bg-cyan-500/20 blur-[180px]" />
+
+          <div className="relative rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-3 shadow-2xl">
+            <div className="rounded-2xl overflow-hidden border border-white/10">
+              <div className="h-12 bg-zinc-950 border-b border-white/10 flex items-center px-5 gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                <div className="w-3 h-3 rounded-full bg-green-500" />
               </div>
-              <img 
-                src="/dashboard-mockup.png" 
-                alt="ReguTwin Dashboard UI Preview" 
-                className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-300 block"
+
+              <img
+                src="/dashboard-mockup.png"
+                alt="dashboard"
+                className="w-full object-cover"
               />
             </div>
           </div>
-        </motion.div>
+        </div>
+      </section>
 
-        {/* Features / Agents Section */}
-        <div className="py-12 md:py-20 border-t border-white/5">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">Powered by Agentic Workflows</h2>
-            <p className="text-gray-400 font-medium">A sophisticated ecosystem of autonomous AI agents working in concert.</p>
-          </div>
+      {/* Workflow */}
+      <section
+        id="architecture"
+        className="max-w-7xl mx-auto px-6 py-24"
+      >
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold">
+            Regulatory Intelligence Pipeline
+          </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <FeatureCard 
-              icon={<Eye className="text-cyan-400" size={24} />}
-              title="Watchman Agent"
-              description="Continuously monitors external regulatory bodies and detects new compliance documents."
-            />
-            <FeatureCard 
-              icon={<BrainCircuit className="text-indigo-400" size={24} />}
-              title="Analyst Agent"
-              description="Extracts obligations, deadlines, and impacts using advanced NLP and stores them in ChromaDB."
-            />
-            <FeatureCard 
-              icon={<Zap className="text-amber-400" size={24} />}
-              title="Conflict Engine"
-              description="Identifies overlaps and contradictions between new regulations and existing internal policies."
-            />
-          </div>
+          <p className="text-zinc-400 mt-4">
+            End-to-end automation from regulation discovery to compliance
+            validation.
+          </p>
         </div>
 
-        {/* Technical Footer */}
-        <footer className="mt-auto border-t border-white/10 py-8 flex flex-col md:flex-row items-center justify-between text-gray-500 text-sm">
-          <div className="flex items-center gap-2 mb-4 md:mb-0">
-            <ShieldCheck size={18} className="text-gray-400" />
-            <span className="font-bold text-gray-300">ReguTwin OS</span>
-            <span>© 2026</span>
+        <div className="grid lg:grid-cols-6 gap-4">
+          {[
+            "Watchman",
+            "Analyst",
+            "MAP Engine",
+            "Conflict",
+            "Validator",
+            "Dashboard",
+          ].map((item) => (
+            <div
+              key={item}
+              className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 text-center"
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Agents */}
+      <section
+        id="agents"
+        className="max-w-7xl mx-auto px-6 py-24"
+      >
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold">
+            Autonomous AI Agents
+          </h2>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          <AgentCard
+            icon={<Eye size={24} />}
+            title="Watchman Agent"
+            points={[
+              "RBI Monitoring",
+              "SEBI Monitoring",
+              "PDF Ingestion",
+              "Real-time Detection",
+            ]}
+          />
+
+          <AgentCard
+            icon={<BrainCircuit size={24} />}
+            title="Analyst Agent"
+            points={[
+              "Obligation Extraction",
+              "Deadline Analysis",
+              "Risk Assessment",
+              "MAP Generation",
+            ]}
+          />
+
+          <AgentCard
+            icon={<Zap size={24} />}
+            title="Conflict Engine"
+            points={[
+              "Vector Search",
+              "Policy Matching",
+              "Conflict Detection",
+              "Risk Alerts",
+            ]}
+          />
+        </div>
+      </section>
+
+      {/* Metrics */}
+      <section
+        id="metrics"
+        className="max-w-7xl mx-auto px-6 py-24"
+      >
+        <div className="grid md:grid-cols-4 gap-6">
+          <MetricCard value="98%" label="Compliance Accuracy" />
+          <MetricCard value="24/7" label="Regulation Monitoring" />
+          <MetricCard value="75%" label="Manual Effort Reduced" />
+          <MetricCard value="<5s" label="Detection Time" />
+        </div>
+      </section>
+
+      {/* Tech Stack */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <h2 className="text-center text-4xl font-bold mb-16">
+          Built For Enterprise Scale
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          <StackCard
+            icon={<Database />}
+            title="Data Layer"
+            description="PostgreSQL, MongoDB, ChromaDB"
+          />
+
+          <StackCard
+            icon={<Server />}
+            title="AI Layer"
+            description="LangGraph, Ollama, Agent Workflows"
+          />
+
+          <StackCard
+            icon={<Lock />}
+            title="Governance"
+            description="Audit Trails, Validation, Security"
+          />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-10">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={18} />
+            <span className="font-semibold">ReguTwin OS</span>
           </div>
-          <div className="flex items-center gap-6 font-semibold">
-            <span className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><Code size={16} /> React + Node</span>
-            <span className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><Server size={16} /> LangGraph</span>
-            <span className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><Lock size={16} /> SOC2 Ready</span>
+
+          <div className="flex gap-6 text-zinc-500 mt-4 md:mt-0">
+            <span>React</span>
+            <span>Node.js</span>
+            <span>PostgreSQL</span>
+            <span>LangGraph</span>
+            <span>ChromaDB</span>
           </div>
-        </footer>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function AgentCard({
+  icon,
+  title,
+  points,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  points: string[];
+}) {
+  return (
+    <div className="group p-8 rounded-3xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] hover:-translate-y-2 transition-all">
+      <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6">
+        {icon}
+      </div>
+
+      <h3 className="text-2xl font-bold mb-6">{title}</h3>
+
+      <div className="space-y-3">
+        {points.map((point) => (
+          <div
+            key={point}
+            className="flex items-center gap-3 text-zinc-400"
+          >
+            <CheckCircle2 size={16} />
+            {point}
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+function MetricCard({
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+}) {
   return (
-    <div className="p-6 md:p-8 flex flex-col h-full bg-white/[0.02] border border-white/10 rounded-2xl hover:bg-white/[0.04] transition-colors">
-      <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-5">
-        {icon}
-      </div>
-      <h3 className="text-lg md:text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-gray-400 leading-relaxed text-sm font-medium">
-        {description}
-      </p>
+    <div className="rounded-3xl p-8 border border-white/10 bg-white/[0.03] text-center">
+      <div className="text-5xl font-black">{value}</div>
+      <div className="text-zinc-400 mt-2">{label}</div>
+    </div>
+  );
+}
+
+function StackCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="p-8 rounded-3xl border border-white/10 bg-white/[0.03]">
+      <div className="mb-5">{icon}</div>
+      <h3 className="text-xl font-bold mb-3">{title}</h3>
+      <p className="text-zinc-400">{description}</p>
     </div>
   );
 }

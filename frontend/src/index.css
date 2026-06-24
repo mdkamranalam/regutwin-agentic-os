@@ -55,6 +55,10 @@
   padding: 0;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -67,6 +71,7 @@ body {
   color: #f8fafc; /* Crisp white text */
   min-height: 100vh;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 /* Linear-style premium grid background */
