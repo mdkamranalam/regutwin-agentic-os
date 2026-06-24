@@ -11,17 +11,48 @@ interface KPICardProps {
   trendLabel?: string;
   className?: string;
   colorTheme?: 'emerald' | 'amber' | 'red' | 'blue' | 'violet';
+  sparklineData?: number[];
 }
 
 const colorMap = {
-  emerald: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-500', iconBg: 'bg-emerald-500/20' },
-  amber: { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-500', iconBg: 'bg-amber-500/20' },
-  red: { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-500', iconBg: 'bg-red-500/20' },
-  blue: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-500', iconBg: 'bg-cyan-500/20' },
-  violet: { bg: 'bg-violet-500/10', border: 'border-violet-500/20', text: 'text-violet-500', iconBg: 'bg-violet-500/20' },
+  emerald: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-500', iconBg: 'bg-emerald-500/20', stroke: '#10B981' },
+  amber: { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-500', iconBg: 'bg-amber-500/20', stroke: '#F59E0B' },
+  red: { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-500', iconBg: 'bg-red-500/20', stroke: '#EF4444' },
+  blue: { bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', text: 'text-cyan-500', iconBg: 'bg-cyan-500/20', stroke: '#06B6D4' },
+  violet: { bg: 'bg-violet-500/10', border: 'border-violet-500/20', text: 'text-violet-500', iconBg: 'bg-violet-500/20', stroke: '#8B5CF6' },
 };
 
-export function KPICard({ title, value, icon, trend, trendLabel, className, colorTheme = 'violet' }: KPICardProps) {
+function Sparkline({ data, color }: { data: number[], color: string }) {
+  if (!data || data.length < 2) return null;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const width = 80;
+  const height = 30;
+
+  const points = data.map((val, i) => {
+    const x = (i / (data.length - 1)) * width;
+    const y = height - ((val - min) / range) * height;
+    return `${x},${y}`;
+  }).join(' ');
+
+  return (
+    <div className="absolute bottom-0 right-0 w-20 h-12 opacity-40 pointer-events-none">
+      <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
+        <polyline
+          fill="none"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          points={points}
+        />
+      </svg>
+    </div>
+  );
+}
+
+export function KPICard({ title, value, icon, trend, trendLabel, className, colorTheme = 'violet', sparklineData }: KPICardProps) {
   const colors = colorMap[colorTheme];
 
   return (
@@ -40,7 +71,7 @@ export function KPICard({ title, value, icon, trend, trendLabel, className, colo
         <div className={cn('p-2.5 rounded-xl border', colors.iconBg, colors.border, colors.text)}>
           {icon}
         </div>
-        
+
         {trend !== undefined && (
           <div className={cn(
             'flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border',
@@ -61,6 +92,8 @@ export function KPICard({ title, value, icon, trend, trendLabel, className, colo
           {trendLabel && <span className="text-xs text-gray-500">{trendLabel}</span>}
         </div>
       </div>
+
+      <Sparkline data={sparklineData || [10, 20, 15, 25, 22, 30, 28]} color={colors.stroke} />
     </motion.div>
   );
 }
@@ -83,7 +116,7 @@ export function RadialKPICard({ score, previousScore }: { score: number, previou
       )}
     >
       <div className={cn('absolute inset-0 opacity-10 pointer-events-none', colors.bg)} />
-      
+
       <div className="relative flex items-center justify-center mb-2" style={{ width: 140, height: 140 }}>
         <svg width="140" height="140" viewBox="0 0 140 140" className="-rotate-90">
           <circle cx="70" cy="70" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" />

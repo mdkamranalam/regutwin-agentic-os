@@ -67,35 +67,35 @@ export default function DashboardLayout() {
         )}
       >
         {/* Workspace Switcher */}
-        <div className="p-4 border-b border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors">
+        <div className="p-4 border-b border-white/5 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-all duration-300 group">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-500/20 border border-emerald-500/30 text-emerald-400">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/20 transition-colors shadow-sm">
               <ShieldCheck size={20} />
             </div>
-            <div>
-              <p className="text-white font-bold text-sm leading-tight tracking-wide">Global Bank Inc</p>
-              <p className="text-[10px] font-medium text-emerald-400">Premium Enterprise</p>
+            <div className="min-w-0">
+              <p className="text-white font-bold text-sm leading-tight tracking-wide truncate">Global Bank Inc</p>
+              <p className="text-[10px] font-medium text-emerald-400/80 truncate">Premium Enterprise</p>
             </div>
           </div>
-          <ChevronDown size={16} className="text-gray-500" />
+          <ChevronDown size={16} className="text-gray-500 group-hover:text-gray-300 transition-colors" />
         </div>
 
-        {/* Search Command Bar (Fake) */}
-        <div className="px-4 py-3">
-          <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-black/20 border border-white/10 text-gray-400 text-xs hover:bg-white/5 transition-colors">
-            <Search size={14} />
+        {/* Search Command Bar */}
+        <div className="px-4 py-4">
+          <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-gray-400 text-xs hover:border-white/20 hover:bg-white/5 transition-all duration-200 group">
+            <Search size={14} className="group-hover:text-white transition-colors" />
             <span className="flex-1 text-left">Search commands...</span>
-            <kbd className="hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/10 text-[10px] font-mono">
+            <kbd className="hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/10 text-[10px] font-mono text-gray-400 border border-white/10">
               ⌘K
             </kbd>
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-6">
+        <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-6 scroll-smooth hide-scrollbar">
           {NAV_GROUPS.map((group, gIdx) => (
-            <div key={gIdx}>
-              <p className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+            <div key={gIdx} className="space-y-1">
+              <p className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-500 opacity-60">
                 {group.title}
               </p>
               <div className="space-y-0.5">
@@ -108,13 +108,13 @@ export default function DashboardLayout() {
                       to={item.path}
                       onClick={() => setSidebarOpen(false)}
                       className={cn(
-                        'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                        isActive 
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]' 
+                        'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 group',
+                        isActive
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm'
                           : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
                       )}
                     >
-                      <Icon size={16} className={cn(isActive ? 'text-emerald-400' : 'text-gray-500')} />
+                      <Icon size={16} className={cn(isActive ? 'text-emerald-400' : 'text-gray-500 group-hover:text-white transition-colors')} />
                       {item.label}
                     </Link>
                   );
@@ -125,11 +125,14 @@ export default function DashboardLayout() {
         </nav>
 
         {/* User Profile Card */}
-        <div className="p-4 border-t border-white/5">
-          <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors">
-            <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8B93&color=fff&rounded=true" alt="User" className="w-9 h-9 rounded-full border border-white/10" />
+        <div className="p-4 border-t border-white/5 bg-black/20">
+          <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer transition-all duration-200 group">
+            <div className="relative">
+              <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8B93&color=fff&rounded=true" alt="User" className="w-9 h-9 rounded-full border border-white/10" />
+              <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#0f1115] rounded-full" />
+            </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-bold truncate">Sarah Jenkins</p>
+              <p className="text-white text-sm font-bold truncate group-hover:text-emerald-400 transition-colors">Sarah Jenkins</p>
               <p className="text-[11px] text-gray-500 truncate">Chief Compliance Officer</p>
             </div>
           </div>
