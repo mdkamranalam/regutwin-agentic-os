@@ -5,7 +5,7 @@ import {
   LayoutDashboard, UploadCloud, Library, ListTodo, ClipboardCheck, 
   Eye, BrainCircuit, Zap, Stethoscope, 
   History, BarChart3, Settings,
-  Search, Bot, Activity, ChevronDown, Menu, X, ShieldCheck
+  Search, Bot, Activity, ChevronDown, Menu, ShieldCheck
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 

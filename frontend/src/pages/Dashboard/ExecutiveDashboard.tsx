@@ -6,7 +6,7 @@ import { KPICard, RadialKPICard } from '../../components/dashboard/KPICard';
 import { InsightsPanel } from '../../components/dashboard/InsightsPanel';
 import { AIPipeline } from '../../components/dashboard/AIPipeline';
 import { AlertCircle, FileText, CheckCircle2, RefreshCw, Layers } from 'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend } from 'recharts';
 
 interface HealthMetrics {
   healthScore: number;
@@ -202,7 +202,7 @@ export default function ExecutiveDashboard() {
                   dataKey="value"
                   stroke="none"
                 >
-                  {impactData.map((entry, index) => (
+                  {impactData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                   ))}
                 </Pie>

@@ -37,7 +37,7 @@ export function AIPipeline() {
           transition={{ duration: 2, ease: 'easeOut' }}
         />
 
-        {AGENTS.map((agent, idx) => {
+        {AGENTS.map((agent) => {
           const isActive = agent.status === 'Active';
           const isWaiting = agent.status === 'Waiting';
           
