@@ -176,7 +176,7 @@ export default function HumanApprovalQueue() {
             </p>
 
             {/* Action buttons */}
-            <div className="flex gap-2 pt-1">
+            <div className="flex flex-col sm:flex-row gap-2 pt-1">
               <button
                 onClick={() => handleDecision(req, true)}
                 disabled={!!isActing}

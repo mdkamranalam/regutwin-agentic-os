@@ -9,6 +9,7 @@ import MapDashboard from '../pages/MAPs/MapDashboard';
 import AuditDashboard from '../pages/Governance/AuditDashboard';
 import ExecutiveDashboard from '../pages/Dashboard/ExecutiveDashboard';
 import LandingPage from '../pages/Landing/LandingPage';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 /* ============================================
    Application Routes
@@ -31,14 +32,19 @@ export const router = createBrowserRouter([
   },
   {
     /* Protected routes — /upload, /dashboard, etc. */
-    element: <DashboardLayout />,
+    element: <ProtectedRoute />,
     children: [
-      { path: 'dashboard', element: <ExecutiveDashboard /> },
-      { path: 'upload', element: <UploadPage /> },
-      { path: 'maps', element: <MapDashboard /> },
-      { path: 'regulations', element: <RegulationsPage /> },
-      { path: 'audits', element: <AuditDashboard /> },
-      { path: 'validation', element: <PlaceholderPage title="Validation" message="Validation results will be built here." /> },
+      {
+        element: <DashboardLayout />,
+        children: [
+          { path: 'dashboard', element: <ExecutiveDashboard /> },
+          { path: 'upload', element: <UploadPage /> },
+          { path: 'maps', element: <MapDashboard /> },
+          { path: 'regulations', element: <RegulationsPage /> },
+          { path: 'audits', element: <AuditDashboard /> },
+          { path: 'validation', element: <PlaceholderPage title="Validation" message="Validation results will be built here." /> },
+        ]
+      }
     ],
   },
   {

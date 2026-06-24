@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 /* ============================================
    SignupPage — Create an account
@@ -25,6 +26,7 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const getStrength = (): number => {
     let s = 0;
@@ -56,10 +58,16 @@ export default function SignupPage() {
 
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      window.location.href = '/upload';
+      await api.post('/auth/register', { 
+        name, 
+        email, 
+        password, 
+        // Map common departments to roles, default to COMPLIANCE
+        role: department === 'Internal Audit' ? 'AUDITOR' : department === 'Risk Management' ? 'MANAGER' : 'COMPLIANCE' 
+      });
+      navigate('/auth/login');
     } catch {
-      setError('Registration failed. Please try again.');
+      setError('Registration failed. Please try again or use a different email.');
     } finally {
       setIsLoading(false);
     }

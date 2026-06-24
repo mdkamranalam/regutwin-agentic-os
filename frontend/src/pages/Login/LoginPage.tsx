@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../../services/api';
 
 /* ============================================
    LoginPage — Clean light card design
@@ -22,8 +23,14 @@ export default function LoginPage() {
 
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      window.location.href = '/upload';
+      const response = await api.post('/auth/login', { email, password });
+      if (response.data.accessToken) {
+        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        window.location.href = '/dashboard';
+      } else {
+        throw new Error('No token received');
+      }
     } catch {
       setError('Invalid credentials. Please try again.');
     } finally {
