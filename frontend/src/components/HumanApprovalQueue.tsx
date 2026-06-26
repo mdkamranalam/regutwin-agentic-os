@@ -97,29 +97,30 @@ export default function HumanApprovalQueue() {
 
   return (
     <div
-      className="rounded-2xl p-5 space-y-4"
+      className="p-6 space-y-6"
       style={{
-        background: 'rgba(239,68,68,0.04)',
-        border: '1px solid rgba(239,68,68,0.2)',
+        background: 'rgba(239,68,68,0.02)',
+        border: '1px solid rgba(239,68,68,0.15)',
+        boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.02), 0 10px 30px rgba(0,0,0,0.5)',
       }}
     >
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">🚨</span>
+        <div className="flex items-center gap-3">
+          <span className="text-xl">🚨</span>
           <div>
-            <h3 className="text-sm font-bold text-white">Human Approval Required</h3>
-            <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <h3 className="text-sm font-extrabold text-white tracking-tight">Human Approval Required</h3>
+            <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
               Critical-risk regulations paused — awaiting compliance manager sign-off
             </p>
           </div>
         </div>
         {pending.length > 0 && (
           <span
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold animate-pulse"
-            style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444' }}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider animate-pulse"
+            style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block" />
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
             {pending.length} Pending
           </span>
         )}
@@ -133,7 +134,7 @@ export default function HumanApprovalQueue() {
         return (
           <div
             key={req.id}
-            className="rounded-xl p-4 space-y-3"
+            className="rounded-xl p-5 space-y-4"
             style={{
               background: riskStyle.bg,
               border: `1px solid ${riskStyle.border}`,
@@ -150,37 +151,37 @@ export default function HumanApprovalQueue() {
                   {req.legalRisk} Risk
                 </span>
                 <span
-                  className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase"
-                  style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.5)' }}
+                  className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide"
+                  style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.6)' }}
                 >
                   {ACTION_LABELS[req.recommendedAction] || req.recommendedAction}
                 </span>
               </div>
-              <span className="text-[10px] shrink-0" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              <span className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>
                 {new Date(req.timestamp).toLocaleTimeString()}
               </span>
             </div>
 
             {/* Rationale */}
             <div
-              className="rounded-lg p-3 text-xs leading-relaxed"
-              style={{ background: 'rgba(0,0,0,0.2)', color: 'rgba(255,255,255,0.65)' }}
+              className="rounded-xl p-3.5 text-xs leading-relaxed border border-white/5 shadow-inner"
+              style={{ background: 'rgba(0,0,0,0.3)', color: 'rgba(255,255,255,0.7)' }}
             >
-              <span className="font-semibold text-white/80">Legal Counsel: </span>
+              <span className="font-bold text-white/90">Legal Counsel Rationale: </span>
               {req.rationale || 'No rationale provided by the Legal Reviewer agent.'}
             </div>
 
             {/* Regulation reference */}
-            <p className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.25)' }}>
+            <p className="text-[10px] font-mono opacity-40">
               Regulation ID: {req.regulationId}
             </p>
 
             {/* Action buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 pt-1">
+            <div className="flex flex-col sm:flex-row gap-3 pt-1">
               <button
                 onClick={() => handleDecision(req, true)}
                 disabled={!!isActing}
-                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm hover:scale-[1.01]"
                 style={{
                   background: isActing === 'approving' ? 'rgba(16,185,129,0.2)' : 'rgba(16,185,129,0.15)',
                   border: '1px solid rgba(16,185,129,0.3)',
@@ -201,7 +202,7 @@ export default function HumanApprovalQueue() {
               <button
                 onClick={() => handleDecision(req, false)}
                 disabled={!!isActing}
-                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm hover:scale-[1.01]"
                 style={{
                   background: isActing === 'rejecting' ? 'rgba(239,68,68,0.2)' : 'rgba(239,68,68,0.1)',
                   border: '1px solid rgba(239,68,68,0.25)',
@@ -226,24 +227,24 @@ export default function HumanApprovalQueue() {
 
       {/* Resolved items (collapsed) */}
       {resolved.length > 0 && (
-        <div className="space-y-2 pt-1">
-          <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'rgba(255,255,255,0.25)' }}>
+        <div className="space-y-2 pt-2 border-t border-red-500/10">
+          <p className="text-[10px] uppercase tracking-wider font-extrabold" style={{ color: 'rgba(255,255,255,0.3)' }}>
             Recently Resolved
           </p>
           {resolved.map((req) => (
             <div
               key={req.id}
-              className="flex items-center justify-between px-3 py-2 rounded-lg"
+              className="flex items-center justify-between px-4 py-2 rounded-lg"
               style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.06)',
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.05)',
               }}
             >
               <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 Regulation {req.regulationId.slice(0, 8)}…
               </span>
               <span
-                className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase"
+                className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide"
                 style={{
                   background:
                     req.resolvedAs === 'approved'

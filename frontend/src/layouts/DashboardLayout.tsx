@@ -109,10 +109,10 @@ export default function DashboardLayout() {
                       to={item.path}
                       onClick={() => setSidebarOpen(false)}
                       className={cn(
-                        'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 group',
+                        'flex items-center gap-3 px-3 py-2 text-sm font-medium transition-all duration-200 group relative',
                         isActive
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm'
-                          : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                          ? 'bg-emerald-500/5 text-emerald-400 border-l-2 border-l-emerald-500 border-y-transparent border-r-transparent shadow-sm rounded-l-none pl-2.5'
+                          : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-l-transparent border-y-transparent border-r-transparent rounded-l-none pl-2.5'
                       )}
                     >
                       <Icon size={16} className={cn(isActive ? 'text-emerald-400' : 'text-gray-500 group-hover:text-white transition-colors')} />
@@ -160,8 +160,8 @@ export default function DashboardLayout() {
 
           <div className="flex items-center gap-3">
             {/* Phase 12 Multi-Tenancy Role Switcher */}
-            <div className="flex items-center gap-1.5 bg-black/60 border border-white/10 rounded-xl px-2.5 py-1">
-              <span className="text-[10px] uppercase font-bold text-slate-500">Scope:</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Scope:</span>
               <select
                 onChange={(e) => {
                   const val = e.target.value;
@@ -170,13 +170,13 @@ export default function DashboardLayout() {
                   window.dispatchEvent(new Event('tenant_switched'));
                 }}
                 defaultValue="ADMIN:All"
-                className="bg-transparent text-xs font-bold text-emerald-400 focus:outline-none cursor-pointer"
+                className="select-premium"
               >
-                <option value="ADMIN:All" className="bg-zinc-900 text-white">👑 Admin (All Depts)</option>
-                <option value="MANAGER:IT Security" className="bg-zinc-900 text-white">🛡️ IT Security Manager</option>
-                <option value="MANAGER:Risk" className="bg-zinc-900 text-white">⚖️ Risk Officer</option>
-                <option value="MANAGER:Legal" className="bg-zinc-900 text-white">📜 Legal Counsel</option>
-                <option value="COMPLIANCE:Compliance" className="bg-zinc-900 text-white">📋 Compliance Specialist</option>
+                <option value="ADMIN:All" className="bg-zinc-950 text-emerald-400 font-semibold">👑 Admin (All Depts)</option>
+                <option value="MANAGER:IT Security" className="bg-zinc-950 text-emerald-400 font-semibold">🛡️ IT Security Manager</option>
+                <option value="MANAGER:Risk" className="bg-zinc-950 text-emerald-400 font-semibold">⚖️ Risk Officer</option>
+                <option value="MANAGER:Legal" className="bg-zinc-950 text-emerald-400 font-semibold">📜 Legal Counsel</option>
+                <option value="COMPLIANCE:Compliance" className="bg-zinc-950 text-emerald-400 font-semibold">📋 Compliance Specialist</option>
               </select>
             </div>
 

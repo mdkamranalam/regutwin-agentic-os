@@ -155,15 +155,15 @@ export default function ExecutiveDashboard() {
 
       {/* Phase 11 SLA Breach Ticker Banner */}
       {((safeData.metrics as any).overdue > 0) && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-between text-red-400 animate-pulse">
+        <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/30 flex items-center justify-between text-red-400 animate-alert-pulse">
           <div className="flex items-center gap-3">
-            <AlertCircle size={20} className="text-red-500 shrink-0" />
+            <AlertCircle size={20} className="text-red-500 shrink-0 animate-bounce" />
             <div>
-              <p className="text-sm font-bold text-white">🚨 SLA Escalation Warning: {(safeData.metrics as any).overdue} Task(s) Overdue</p>
-              <p className="text-xs text-red-300/80">Compliance deadlines breached. Tasks weighted 3× penalty against enterprise health score.</p>
+              <p className="text-sm font-extrabold text-white">🚨 SLA Breach Escalation Warning: {(safeData.metrics as any).overdue} Task(s) Overdue</p>
+              <p className="text-xs text-red-300/70 mt-0.5">Critical compliance deadlines breached. Tasks weighted with 3× penalty drop on enterprise health score.</p>
             </div>
           </div>
-          <span className="text-xs font-black uppercase tracking-widest px-3 py-1 rounded bg-red-500 text-black">Action Required</span>
+          <span className="text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-lg bg-red-500 text-black shadow-md">Action Required</span>
         </div>
       )}
 
@@ -219,18 +219,18 @@ export default function ExecutiveDashboard() {
       {/* Middle Section: Charts and Enterprise Widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Trend Chart */}
-        <div className="lg:col-span-2 glass-panel p-6 rounded-2xl border border-white/10">
+        <div className="lg:col-span-2 glass-panel p-6 shadow-lg">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-white tracking-tight">Compliance vs Risk Trend</h3>
-              <p className="text-xs text-gray-400 mt-1">7-day historical performance</p>
+              <h3 className="text-base font-extrabold text-white tracking-tight">Compliance vs Risk Trend</h3>
+              <p className="text-xs text-zinc-400 mt-1">7-day historical performance</p>
             </div>
             <div className="flex gap-2">
-              <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold">
-                <div className="w-2 h-2 rounded-full bg-emerald-500" /> Compliance
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Compliance
               </div>
-              <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold">
-                <div className="w-2 h-2 rounded-full bg-red-500" /> Risk
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500" /> Risk
               </div>
             </div>
           </div>
@@ -239,44 +239,45 @@ export default function ExecutiveDashboard() {
               <AreaChart data={activeTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorComp" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.2}/>
                     <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorRisk" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.3}/>
+                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.2}/>
                     <stop offset="95%" stopColor="#EF4444" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6B7280', fontWeight: 500 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6B7280', fontWeight: 500 }} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#09090b', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                  itemStyle={{ fontSize: '13px' }}
+                  contentStyle={{ backgroundColor: 'rgba(9, 9, 11, 0.95)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)' }}
+                  itemStyle={{ fontSize: '12px', fontWeight: 600 }}
+                  labelStyle={{ fontSize: '11px', color: '#9CA3AF', fontWeight: 600, marginBottom: '4px' }}
                 />
-                <Area type="monotone" dataKey="compliance" name="Compliance %" stroke="#10B981" strokeWidth={2} fillOpacity={1} fill="url(#colorComp)" />
-                <Area type="monotone" dataKey="risk" name="Risk Exposure" stroke="#EF4444" strokeWidth={2} fillOpacity={1} fill="url(#colorRisk)" />
+                <Area type="monotone" dataKey="compliance" name="Compliance %" stroke="#10B981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorComp)" />
+                <Area type="monotone" dataKey="risk" name="Risk Exposure" stroke="#EF4444" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRisk)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Phase 13 Longitudinal Compliance Memory & Velocity Widget */}
-        <div className="lg:col-span-3 glass-panel p-6 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/20 to-zinc-900/40">
-          <div className="mb-4 flex items-center justify-between">
+        <div className="lg:col-span-3 glass-panel p-6 bg-gradient-to-r from-indigo-950/10 to-zinc-900/30 shadow-lg">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 text-[10px] font-mono uppercase font-bold tracking-wider">Phase 13 Active</span>
-                <h3 className="text-base font-bold text-white tracking-tight">🧠 Longitudinal Compliance Memory (30-Day Rolling Velocity)</h3>
+                <span className="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 text-[9px] font-mono uppercase font-bold tracking-wider">Phase 13 Active</span>
+                <h3 className="text-base font-extrabold text-white tracking-tight flex items-center gap-2">🧠 Longitudinal Compliance Memory</h3>
               </div>
-              <p className="text-xs text-gray-400 mt-1">Autonomous AI memory curve demonstrating learning & closure velocity acceleration across historical audits</p>
+              <p className="text-xs text-zinc-400 mt-1">Autonomous AI memory curve demonstrating learning & closure velocity acceleration across historical audits</p>
             </div>
-            <div className="text-right hidden sm:block">
-              <span className="text-xs text-gray-400">Current Avg Closure Time</span>
+            <div className="text-left sm:text-right">
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold">Current Avg Closure Time</span>
               <p className="text-lg font-black text-emerald-400">6.1 Days <span className="text-[10px] text-emerald-500 font-mono">(-66% vs Jan)</span></p>
             </div>
           </div>
-          <div className="h-48 w-full mt-4">
+          <div className="h-48 w-full mt-6">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={velocityList.length > 0 ? velocityList : [
                 { month: "Jan", avgDaysToClose: 18.2, closureRate: 72 },
@@ -285,21 +286,31 @@ export default function ExecutiveDashboard() {
                 { month: "Apr", avgDaysToClose: 8.4,  closureRate: 94 },
                 { month: "May", avgDaysToClose: 6.1,  closureRate: 98 }
               ]}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#818cf8' }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#818cf8' }} unit="d" />
-                <Tooltip contentStyle={{ backgroundColor: '#09090b', borderColor: '#4f46e5', borderRadius: '12px' }} />
-                <Area type="monotone" dataKey="avgDaysToClose" name="Avg Resolution (Days)" stroke="#818cf8" strokeWidth={3} fillOpacity={0.2} fill="#4f46e5" />
+                <defs>
+                  <linearGradient id="colorVelocity" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#818cf8" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#818cf8" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#818cf8', fontWeight: 500 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#818cf8', fontWeight: 500 }} unit="d" />
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'rgba(9, 9, 11, 0.95)', border: '1px solid rgba(79, 70, 229, 0.2)', borderRadius: '12px', backdropFilter: 'blur(8px)' }}
+                  itemStyle={{ fontSize: '12px', fontWeight: 600 }}
+                  labelStyle={{ fontSize: '11px', color: '#818cf8', fontWeight: 600, marginBottom: '4px' }}
+                />
+                <Area type="monotone" dataKey="avgDaysToClose" name="Avg Resolution (Days)" stroke="#818cf8" strokeWidth={3} fillOpacity={1} fill="url(#colorVelocity)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Risk Overview Widget */}
-        <div className="glass-panel p-6 rounded-2xl border border-white/10 flex flex-col">
+        <div className="glass-panel p-6 flex flex-col shadow-lg">
           <div className="mb-6">
-            <h3 className="text-base font-bold text-white tracking-tight">Risk Distribution</h3>
-            <p className="text-xs text-gray-400 mt-1">Criticality breakdown</p>
+            <h3 className="text-base font-extrabold text-white tracking-tight">Risk Distribution</h3>
+            <p className="text-xs text-zinc-400 mt-1">Criticality breakdown</p>
           </div>
           <div className="flex-1 space-y-4">
             {[
@@ -308,20 +319,20 @@ export default function ExecutiveDashboard() {
               { label: 'Medium', value: '45', color: 'bg-cyan-500', text: 'text-cyan-400', border: 'border-cyan-500/20', pct: '40%' },
               { label: 'Low', value: '43', color: 'bg-emerald-500', text: 'text-emerald-400', border: 'border-emerald-500/20', pct: '15%' },
             ].map((risk) => (
-              <div key={risk.label} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+              <div key={risk.label} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.01] border border-white/5 hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className={cn('w-2 h-2 rounded-full', risk.color)} />
-                  <span className="text-sm font-medium text-gray-300">{risk.label}</span>
+                  <div className={cn('w-2.5 h-2.5 rounded-full shadow-sm', risk.color)} />
+                  <span className="text-xs font-semibold text-zinc-300">{risk.label}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-bold text-white">{risk.value}</span>
-                  <span className={cn('text-[10px] font-bold', risk.text)}>{risk.pct}</span>
+                  <span className="text-xs font-bold text-white">{risk.value}</span>
+                  <span className={cn('text-[10px] font-bold font-mono px-1.5 py-0.5 rounded bg-white/5', risk.text)}>{risk.pct}</span>
                 </div>
               </div>
             ))}
           </div>
           <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-            <span className="text-xs text-gray-500">Audit Readiness</span>
+            <span className="text-xs text-zinc-500 font-medium">Audit Readiness</span>
             <span className="text-xs font-bold text-emerald-400">94% Ready</span>
           </div>
         </div>
@@ -329,18 +340,18 @@ export default function ExecutiveDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Impact Distribution */}
-        <div className="glass-panel p-6 rounded-2xl border border-white/10">
-          <div className="mb-6">
-            <h3 className="text-base font-bold text-white tracking-tight">Sector Impact</h3>
-            <p className="text-xs text-gray-400 mt-1">Obligation distribution</p>
+        <div className="glass-panel p-6 shadow-lg">
+          <div className="mb-4">
+            <h3 className="text-base font-extrabold text-white tracking-tight">Sector Impact</h3>
+            <p className="text-xs text-zinc-400 mt-1">Obligation distribution</p>
           </div>
           <div className="h-64 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={activeImpactData}
-                  cx="50%" cy="50%"
-                  innerRadius={60} outerRadius={80}
+                  cx="50%" cy="40%"
+                  innerRadius={60} outerRadius={76}
                   paddingAngle={5} dataKey="value" stroke="none"
                 >
                   {activeImpactData.map((_, index) => (
@@ -348,11 +359,16 @@ export default function ExecutiveDashboard() {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#09090b', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                  itemStyle={{ fontSize: '13px', color: '#fff' }}
+                  contentStyle={{ backgroundColor: 'rgba(9, 9, 11, 0.95)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', backdropFilter: 'blur(8px)' }}
+                  itemStyle={{ fontSize: '12px', color: '#fff', fontWeight: 600 }}
                 />
-                <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle"
-                  formatter={(value) => <span className="text-xs text-gray-400 ml-2">{value}</span>}
+                <Legend
+                  verticalAlign="bottom"
+                  align="center"
+                  layout="horizontal"
+                  iconType="circle"
+                  iconSize={8}
+                  formatter={(value) => <span className="text-xs text-zinc-400 font-medium ml-1">{value}</span>}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -360,21 +376,21 @@ export default function ExecutiveDashboard() {
         </div>
 
         {/* Recent Activity Feed */}
-        <div className="glass-panel p-6 rounded-2xl border border-white/10">
+        <div className="glass-panel p-6 shadow-lg">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-white tracking-tight">Activity Feed</h3>
-              <p className="text-xs text-gray-400 mt-1">Latest system events</p>
+              <h3 className="text-base font-extrabold text-white tracking-tight">Activity Feed</h3>
+              <p className="text-xs text-zinc-400 mt-1">Latest system events</p>
             </div>
-            <Bell size={16} className="text-gray-500" />
+            <Bell size={16} className="text-zinc-500" />
           </div>
-          <div className="space-y-4">
+          <div className="space-y-3.5 max-h-[250px] overflow-y-auto hide-scrollbar">
             {activities.map((item) => {
               const IconComponent = typeIcons[item.type] || ShieldCheck;
               return (
-                <div key={item.id} className="flex gap-4 p-3 rounded-xl hover:bg-white/[0.03] transition-colors group cursor-pointer">
+                <div key={item.id} className="flex gap-4 p-3 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/5 transition-all duration-200 group cursor-pointer">
                   <div className={cn(
-                    'w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border',
+                    'w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border shadow-inner',
                     item.type === 'upload' ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400' :
                     item.type === 'conflict' ? 'bg-red-500/10 border-red-500/20 text-red-400' :
                     item.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
@@ -384,10 +400,10 @@ export default function ExecutiveDashboard() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-0.5">
-                      <p className="text-xs font-bold text-white truncate">{item.event}</p>
-                      <span className="text-[10px] text-gray-500 font-medium">{item.time}</span>
+                      <p className="text-xs font-bold text-white truncate group-hover:text-emerald-400 transition-colors">{item.event}</p>
+                      <span className="text-[10px] text-zinc-500 font-mono font-medium">{item.time}</span>
                     </div>
-                    <p className="text-[11px] text-gray-400 truncate">{item.detail}</p>
+                    <p className="text-[11px] text-zinc-400 truncate">{item.detail}</p>
                   </div>
                 </div>
               );
@@ -396,26 +412,26 @@ export default function ExecutiveDashboard() {
         </div>
 
         {/* Upcoming Deadlines */}
-        <div className="glass-panel p-6 rounded-2xl border border-white/10">
+        <div className="glass-panel p-6 shadow-lg">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-white tracking-tight">Upcoming Deadlines</h3>
-              <p className="text-xs text-gray-400 mt-1">Action required items</p>
+              <h3 className="text-base font-extrabold text-white tracking-tight">Upcoming Deadlines</h3>
+              <p className="text-xs text-zinc-400 mt-1">Action required items</p>
             </div>
-            <Calendar size={16} className="text-gray-500" />
+            <Calendar size={16} className="text-zinc-500" />
           </div>
           <div className="space-y-3">
             {activeDeadlines.map((d) => (
-              <div key={d.id} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between group hover:border-white/10 transition-colors">
+              <div key={d.id} className="p-3 rounded-xl bg-white/[0.01] border border-white/5 flex items-center justify-between group hover:border-white/10 hover:bg-white/[0.02] transition-all duration-200">
                 <div className="flex items-center gap-3">
-                  <Clock size={14} className="text-gray-500 group-hover:text-indigo-400 transition-colors" />
+                  <Clock size={14} className="text-zinc-500 group-hover:text-indigo-400 transition-colors" />
                   <div>
                     <p className="text-xs font-bold text-white truncate max-w-[150px]">{d.task}</p>
-                    <p className="text-[10px] text-gray-500">{d.date}</p>
+                    <p className="text-[10px] text-zinc-500 mt-0.5">{d.date}</p>
                   </div>
                 </div>
                 <span className={cn(
-                  'text-[9px] font-black uppercase px-2 py-0.5 rounded border',
+                  'text-[9px] font-black uppercase px-2 py-0.5 rounded border shadow-sm',
                   d.priority === 'Critical' ? 'text-red-400 bg-red-500/10 border-red-500/20' :
                   d.priority === 'High' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
                   'text-blue-400 bg-blue-500/10 border-blue-500/20'
@@ -425,14 +441,14 @@ export default function ExecutiveDashboard() {
               </div>
             ))}
           </div>
-          <button className="w-full mt-6 py-2 text-xs font-bold text-gray-400 hover:text-white transition-colors border-t border-white/5 pt-4">
+          <button className="w-full mt-6 py-2 text-xs font-bold text-zinc-500 hover:text-white transition-colors border-t border-white/5 pt-4">
             View Full Compliance Calendar
           </button>
         </div>
       </div>
 
       {/* Human Approval Queue */}
-      <div className="glass-panel rounded-2xl overflow-hidden border border-white/10">
+      <div className="glass-panel overflow-hidden shadow-lg">
         <HumanApprovalQueue />
       </div>
     </motion.div>

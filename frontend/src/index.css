@@ -51,8 +51,8 @@
 /* Base Styles */
 *, *::before, *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  /* margin: 0; */
+  /* padding: 0; */
 }
 
 html {
@@ -63,7 +63,9 @@ html {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #0f1115; /* Rich Charcoal Background */
+  background: radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+              radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+              #08090d;
   color: #f8fafc; /* Crisp white text */
   min-height: 100vh;
   line-height: 1.6;
@@ -761,46 +763,49 @@ body {
    Premium Glassmorphism 2.0 Utilities
    ============================================ */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(18, 20, 29, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-radius: 16px;
   box-shadow: 
     inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
-    0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    0 16px 36px -12px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card-hover {
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(18, 20, 29, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-radius: 16px;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+    0 16px 36px -12px rgba(0, 0, 0, 0.8);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card-hover:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  background: rgba(24, 27, 40, 0.85);
+  border-color: rgba(99, 102, 241, 0.35);
   box-shadow: 
     inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-    0 12px 30px -10px rgba(0, 0, 0, 0.6),
-    0 0 20px rgba(99, 102, 241, 0.1);
+    0 24px 50px -12px rgba(0, 0, 0, 0.9),
+    0 0 25px rgba(99, 102, 241, 0.15);
 }
 
 .glass-sidebar {
-  background: rgba(15, 15, 22, 0.85);
-  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(11, 12, 19, 0.85);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
 .glass-header {
-  background: rgba(15, 15, 22, 0.85);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(11, 12, 19, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
@@ -834,4 +839,135 @@ body {
 .hide-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Premium UI Overhaul System */
+.glass-panel-premium {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(226, 153, 153, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 20px;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+    0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-premium-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-premium-hover:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(99, 102, 241, 0.2);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 24px 50px -12px rgba(0, 0, 0, 0.75),
+    0 0 30px rgba(99, 102, 241, 0.15);
+}
+
+/* Specific agent glowing highlights */
+.glow-border-emerald {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glow-border-emerald:hover {
+  transform: translateY(-3px);
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 24px 50px -12px rgba(0, 0, 0, 0.75),
+    0 0 30px rgba(16, 185, 129, 0.15);
+}
+
+.glow-border-cyan {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glow-border-cyan:hover {
+  transform: translateY(-3px);
+  border-color: rgba(6, 182, 212, 0.3);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 24px 50px -12px rgba(0, 0, 0, 0.75),
+    0 0 30px rgba(6, 182, 212, 0.15);
+}
+
+.glow-border-violet {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glow-border-violet:hover {
+  transform: translateY(-3px);
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 24px 50px -12px rgba(0, 0, 0, 0.75),
+    0 0 30px rgba(139, 92, 246, 0.15);
+}
+
+/* Custom premium select controls */
+.select-premium {
+  appearance: none;
+  cursor: pointer;
+  padding: 6px 28px 6px 12px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #34d399; /* emerald-400 */
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2334d399' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.select-premium:hover {
+  border-color: rgba(52, 211, 153, 0.4);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.select-premium:focus {
+  outline: none;
+  border-color: rgba(52, 211, 153, 0.6);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15);
+}
+
+/* Premium Button Glow */
+.btn-premium-glow {
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  color: #09090b !important;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-premium-glow:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.45);
+}
+
+.btn-premium-secondary {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.btn-premium-secondary:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-0.5px);
+}
+
+/* Pulse red alert border for SLA Banner */
+@keyframes alert-pulse-glow {
+  0%, 100% { border-color: rgba(239, 68, 68, 0.3); box-shadow: 0 0 10px rgba(239, 68, 68, 0.08); }
+  50% { border-color: rgba(239, 68, 68, 0.6); box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+}
+
+.animate-alert-pulse {
+  animation: alert-pulse-glow 2s infinite ease-in-out;
 }
