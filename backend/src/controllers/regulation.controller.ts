@@ -47,14 +47,44 @@ export const uploadRegulation = async (req: Request, res: Response) => {
     
     // Create MAPs in the backend from the workflow result
     if (workflowResult.maps && workflowResult.maps.maps) {
-      const { default: MAP, MapStatus } = await import("../models/map.model.js");
+      const { default: MAP, MapStatus, MapDepartment } = await import("../models/map.model.js");
       for (const m of workflowResult.maps.maps) {
-        await MAP.create({
+        let assignedTo = "Compliance";
+        if (m.assignedTo) {
+          const norm = m.assignedTo.toLowerCase().trim().replace(/[^a-z]/g, "");
+          if (norm === "itsecurity" || norm === "it" || norm === "security") {
+            assignedTo = "IT Security";
+          } else if (norm === "risk") {
+            assignedTo = "Risk";
+          } else if (norm === "legal") {
+            assignedTo = "Legal";
+          } else if (norm === "compliance") {
+            assignedTo = "Compliance";
+          } else if (norm === "finance") {
+            assignedTo = "Finance";
+          }
+        }
+
+        const actionRequired = m.actionRequired || m.action_required || m.description || "Review Regulatory Requirement";
+        const description = m.description || m.actionRequired || m.action_required || "Review Regulatory Requirement";
+        const parsedDate = m.deadline ? new Date(m.deadline) : null;
+        const deadline = (parsedDate && !isNaN(parsedDate.getTime())) ? parsedDate : new Date(Date.now() + 48 * 3600 * 1000);
+
+        const createdMap = await MAP.create({
           regulationId: regulation.id,
-          description: m.description,
-          assignedTo: m.assignedTo,
-          actionRequired: m.actionRequired,
-          status: MapStatus.OPEN
+          description,
+          assignedTo,
+          actionRequired,
+          status: MapStatus.OPEN,
+          deadline
+        });
+
+        const { default: Audit } = await import("../models/audit.model.js");
+        await Audit.create({
+          mapId: createdMap._id,
+          regulationId: regulation.id,
+          action: "CREATED",
+          newStatus: MapStatus.OPEN
         });
       }
     }
@@ -125,15 +155,44 @@ export const ingestRegulationUrl = async (req: Request, res: Response) => {
     await regulation.save();
 
     if (workflowResult.maps && workflowResult.maps.maps) {
-      const { default: MAP, MapStatus } = await import("../models/map.model.js");
+      const { default: MAP, MapStatus, MapDepartment } = await import("../models/map.model.js");
       for (const m of workflowResult.maps.maps) {
-        await MAP.create({
+        let assignedTo = "Compliance";
+        if (m.assignedTo) {
+          const norm = m.assignedTo.toLowerCase().trim().replace(/[^a-z]/g, "");
+          if (norm === "itsecurity" || norm === "it" || norm === "security") {
+            assignedTo = "IT Security";
+          } else if (norm === "risk") {
+            assignedTo = "Risk";
+          } else if (norm === "legal") {
+            assignedTo = "Legal";
+          } else if (norm === "compliance") {
+            assignedTo = "Compliance";
+          } else if (norm === "finance") {
+            assignedTo = "Finance";
+          }
+        }
+
+        const actionRequired = m.actionRequired || m.action_required || m.description || "Review Regulatory Requirement";
+        const description = m.description || m.actionRequired || m.action_required || "Review Regulatory Requirement";
+        const parsedDate = m.deadline ? new Date(m.deadline) : null;
+        const deadline = (parsedDate && !isNaN(parsedDate.getTime())) ? parsedDate : new Date(Date.now() + 48 * 3600 * 1000);
+
+        const createdMap = await MAP.create({
           regulationId: regulation.id,
-          description: m.description,
-          assignedTo: m.assignedTo,
-          actionRequired: m.actionRequired,
+          description,
+          assignedTo,
+          actionRequired,
           status: MapStatus.OPEN,
-          deadline: new Date(Date.now() + 48 * 3600 * 1000) // Default 48h deadline
+          deadline
+        });
+
+        const { default: Audit } = await import("../models/audit.model.js");
+        await Audit.create({
+          mapId: createdMap._id,
+          regulationId: regulation.id,
+          action: "CREATED",
+          newStatus: MapStatus.OPEN
         });
       }
     }

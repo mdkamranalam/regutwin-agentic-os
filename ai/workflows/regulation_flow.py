@@ -86,6 +86,7 @@ def broadcast_update(regulation_id: str, node: str, status: str, payload: dict =
     try:
         requests.post(
             f"{BACKEND_URL}/internal/workflow-update",
+            headers={"X-Internal-Secret": "regutwin_secret_key"},
             json={
                 "regulationId": regulation_id,
                 "node": node,
@@ -106,6 +107,7 @@ def broadcast_hitl_request(regulation_id: str, thread_id: str, legal_review: Leg
     try:
         requests.post(
             f"{BACKEND_URL}/internal/hitl-request",
+            headers={"X-Internal-Secret": "regutwin_secret_key"},
             json={
                 "regulationId": regulation_id,
                 "threadId": thread_id,
@@ -117,6 +119,7 @@ def broadcast_hitl_request(regulation_id: str, thread_id: str, legal_review: Leg
         )
     except Exception as e:
         print(f"[broadcast_hitl] Failed to send HITL request: {e}")
+
 
 
 # ─── Node Definitions ─────────────────────────────────────────────────────────

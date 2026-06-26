@@ -46,6 +46,7 @@ def trigger_ingest(url: str, source: str, title: str):
     try:
         response = requests.post(
             f"{BACKEND_URL}/regulations/ingest-url",
+            headers={"X-Internal-Secret": "regutwin_secret_key"},
             json={
                 "url": url,
                 "source": source,

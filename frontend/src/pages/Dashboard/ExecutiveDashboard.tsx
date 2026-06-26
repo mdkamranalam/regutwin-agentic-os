@@ -11,12 +11,14 @@ import { cn } from '../../utils/cn';
 
 interface HealthMetrics {
   healthScore: number;
+  activeRegulationsCount: number;
   metrics: {
     total: number;
     open: number;
     inProgress: number;
     inReview: number;
     closed: number;
+    overdue: number;
   };
 }
 
@@ -24,29 +26,35 @@ export default function ExecutiveDashboard() {
   const [data, setData] = useState<HealthMetrics | null>(null);
   const [upcomingList, setUpcomingList] = useState<any[]>([]);
   const [velocityList, setVelocityList] = useState<any[]>([]);
+  const [riskTrend, setRiskTrend] = useState<any[]>([]);
+  const [sectorImpact, setSectorImpact] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchHealth = async () => {
+    try {
+      const [healthRes, deadRes, trendRes, riskRes, sectorRes, activityRes] = await Promise.all([
+        api.get('/analytics/health'),
+        api.get('/analytics/upcoming-deadlines').catch(() => ({ data: [] })),
+        api.get('/analytics/trends').catch(() => ({ data: [] })),
+        api.get('/analytics/risk-trends').catch(() => ({ data: [] })),
+        api.get('/analytics/sector-impact').catch(() => ({ data: [] })),
+        api.get('/analytics/recent-activities').catch(() => ({ data: [] }))
+      ]);
+      setData(healthRes.data);
+      setUpcomingList(deadRes.data || []);
+      setVelocityList(trendRes.data || []);
+      setRiskTrend(riskRes.data || []);
+      setSectorImpact(sectorRes.data || []);
+      setActivities(activityRes.data || []);
+    } catch (error) {
+      console.error('Failed to load health metrics', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchHealth = async () => {
-      try {
-        const [healthRes, deadRes, trendRes] = await Promise.all([
-          api.get('/analytics/health'),
-          api.get('/analytics/upcoming-deadlines').catch(() => ({ data: [] })),
-          api.get('/analytics/trends').catch(() => ({ data: [] }))
-        ]);
-        setData(healthRes.data);
-        if (deadRes.data && deadRes.data.length > 0) {
-          setUpcomingList(deadRes.data);
-        }
-        if (trendRes.data && trendRes.data.length > 0) {
-          setVelocityList(trendRes.data);
-        }
-      } catch (error) {
-        console.error('Failed to load health metrics', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchHealth();
     const interval = setInterval(fetchHealth, 30000);
     return () => clearInterval(interval);
@@ -65,10 +73,11 @@ export default function ExecutiveDashboard() {
 
   const safeData = data || {
     healthScore: 85,
-    metrics: { total: 124, open: 12, inProgress: 45, inReview: 18, closed: 49 }
+    activeRegulationsCount: 0,
+    metrics: { total: 124, open: 12, inProgress: 45, inReview: 18, closed: 49, overdue: 0 }
   };
 
-  const trendData = [
+  const fallbackTrendData = [
     { day: 'Mon', risk: 45, compliance: 80 },
     { day: 'Tue', risk: 42, compliance: 82 },
     { day: 'Wed', risk: 50, compliance: 75 },
@@ -77,27 +86,38 @@ export default function ExecutiveDashboard() {
     { day: 'Sat', risk: 28, compliance: 90 },
     { day: 'Sun', risk: 25, compliance: 92 },
   ];
+  const activeTrendData = riskTrend.length > 0 ? riskTrend : fallbackTrendData;
 
-  const impactData = [
+  const fallbackImpactData = [
     { name: 'Data Privacy', value: 35 },
     { name: 'AML/KYC', value: 45 },
     { name: 'Capital Markets', value: 10 },
     { name: 'Consumer Prot.', value: 10 },
   ];
-  const PIE_COLORS = ['#10B981', '#06B6D4', '#8B5CF6', '#F59E0B'];
+  const activeImpactData = sectorImpact.length > 0 ? sectorImpact : fallbackImpactData;
 
-  const activityFeed = [
-    { id: 1, event: 'Regulation uploaded', detail: 'RBI Digital Lending Guidelines 2026', time: '2m ago', type: 'upload', icon: FileText },
-    { id: 2, event: 'Conflict detected', detail: 'RBI 2026 vs SEBI Risk Weighting', time: '15m ago', type: 'conflict', icon: AlertCircle },
-    { id: 3, event: 'Review completed', detail: 'MAP-2024-008 finalized', time: '1h ago', type: 'success', icon: CheckCircle2 },
-    { id: 4, event: 'Audit logged', detail: 'Quarterly compliance snapshot taken', time: '3h ago', type: 'audit', icon: ShieldCheck },
-  ];
+  const PIE_COLORS = ['#10B981', '#06B6D4', '#8B5CF6', '#F59E0B', '#EF4444'];
 
-  const deadlines = [
-    { id: 1, task: 'SEBI Reporting', date: 'Tomorrow, 5:00 PM', priority: 'Critical' },
-    { id: 2, task: 'AML Audit Response', date: 'June 28, 2026', priority: 'High' },
-    { id: 3, task: 'Quarterly Risk Review', date: 'July 02, 2026', priority: 'Medium' },
+  const typeIcons: Record<string, any> = {
+    upload: FileText,
+    conflict: AlertCircle,
+    success: CheckCircle2,
+    audit: ShieldCheck
+  };
+
+  const fallbackDeadlines = [
+    { id: '1', task: 'SEBI Reporting', date: 'Tomorrow, 5:00 PM', priority: 'Critical' },
+    { id: '2', task: 'AML Audit Response', date: 'June 28, 2026', priority: 'High' },
+    { id: '3', task: 'Quarterly Risk Review', date: 'July 02, 2026', priority: 'Medium' },
   ];
+  const activeDeadlines = upcomingList.length > 0
+    ? upcomingList.slice(0, 3).map(u => ({
+        id: u._id,
+        task: u.actionRequired,
+        date: u.deadline ? new Date(u.deadline).toLocaleDateString() : 'No specific deadline',
+        priority: u.assignedTo === 'Risk' ? 'Critical' : u.assignedTo === 'IT Security' ? 'High' : 'Medium'
+      }))
+    : fallbackDeadlines;
 
   return (
     <motion.div
@@ -122,24 +142,24 @@ export default function ExecutiveDashboard() {
           <div className="text-right">
             <p className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Last Sync</p>
             <p className="text-xs text-gray-300 font-medium flex items-center gap-1.5 justify-end">
-              <RefreshCw size={12} className="text-emerald-500" /> Just now
+              <RefreshCw size={12} className="text-emerald-500 animate-spin" /> Just now
             </p>
           </div>
           <div className="h-8 w-px bg-white/10" />
           <div className="text-right">
             <p className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Active Regs</p>
-            <p className="text-xs text-white font-bold">14,209</p>
+            <p className="text-xs text-white font-bold">{safeData.activeRegulationsCount ?? 0}</p>
           </div>
         </div>
       </div>
 
       {/* Phase 11 SLA Breach Ticker Banner */}
-      {((safeData.metrics as any).overdue > 0 || upcomingList.some(u => u.status === 'OVERDUE')) && (
+      {((safeData.metrics as any).overdue > 0) && (
         <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-between text-red-400 animate-pulse">
           <div className="flex items-center gap-3">
             <AlertCircle size={20} className="text-red-500 shrink-0" />
             <div>
-              <p className="text-sm font-bold text-white">🚨 SLA Escalation Warning: {(safeData.metrics as any).overdue || 1} Task(s) Overdue</p>
+              <p className="text-sm font-bold text-white">🚨 SLA Escalation Warning: {(safeData.metrics as any).overdue} Task(s) Overdue</p>
               <p className="text-xs text-red-300/80">Compliance deadlines breached. Tasks weighted 3× penalty against enterprise health score.</p>
             </div>
           </div>
@@ -216,7 +236,7 @@ export default function ExecutiveDashboard() {
           </div>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={activeTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorComp" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
@@ -309,7 +329,7 @@ export default function ExecutiveDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Impact Distribution */}
-        <div className="glass-panel p-6 rounded-2xl border border_white/10">
+        <div className="glass-panel p-6 rounded-2xl border border-white/10">
           <div className="mb-6">
             <h3 className="text-base font-bold text-white tracking-tight">Sector Impact</h3>
             <p className="text-xs text-gray-400 mt-1">Obligation distribution</p>
@@ -318,12 +338,12 @@ export default function ExecutiveDashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={impactData}
+                  data={activeImpactData}
                   cx="50%" cy="50%"
                   innerRadius={60} outerRadius={80}
                   paddingAngle={5} dataKey="value" stroke="none"
                 >
-                  {impactData.map((_, index) => (
+                  {activeImpactData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                   ))}
                 </Pie>
@@ -349,26 +369,29 @@ export default function ExecutiveDashboard() {
             <Bell size={16} className="text-gray-500" />
           </div>
           <div className="space-y-4">
-            {activityFeed.map((item) => (
-              <div key={item.id} className="flex gap-4 p-3 rounded-xl hover:bg-white/[0.03] transition-colors group cursor-pointer">
-                <div className={cn(
-                  'w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border',
-                  item.type === 'upload' ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400' :
-                  item.type === 'conflict' ? 'bg-red-500/10 border-red-500/20 text-red-400' :
-                  item.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
-                  'bg-indigo-500/10 border-indigo-500/20 text-indigo-400'
-                )}>
-                  <item.icon size={14} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-0.5">
-                    <p className="text-xs font-bold text-white truncate">{item.event}</p>
-                    <span className="text-[10px] text-gray-500 font-medium">{item.time}</span>
+            {activities.map((item) => {
+              const IconComponent = typeIcons[item.type] || ShieldCheck;
+              return (
+                <div key={item.id} className="flex gap-4 p-3 rounded-xl hover:bg-white/[0.03] transition-colors group cursor-pointer">
+                  <div className={cn(
+                    'w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border',
+                    item.type === 'upload' ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400' :
+                    item.type === 'conflict' ? 'bg-red-500/10 border-red-500/20 text-red-400' :
+                    item.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
+                    'bg-indigo-500/10 border-indigo-500/20 text-indigo-400'
+                  )}>
+                    <IconComponent size={14} />
                   </div>
-                  <p className="text-[11px] text-gray-400 truncate">{item.detail}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-0.5">
+                      <p className="text-xs font-bold text-white truncate">{item.event}</p>
+                      <span className="text-[10px] text-gray-500 font-medium">{item.time}</span>
+                    </div>
+                    <p className="text-[11px] text-gray-400 truncate">{item.detail}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -382,12 +405,12 @@ export default function ExecutiveDashboard() {
             <Calendar size={16} className="text-gray-500" />
           </div>
           <div className="space-y-3">
-            {deadlines.map((d) => (
+            {activeDeadlines.map((d) => (
               <div key={d.id} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between group hover:border-white/10 transition-colors">
                 <div className="flex items-center gap-3">
                   <Clock size={14} className="text-gray-500 group-hover:text-indigo-400 transition-colors" />
                   <div>
-                    <p className="text-xs font-bold text-white">{d.task}</p>
+                    <p className="text-xs font-bold text-white truncate max-w-[150px]">{d.task}</p>
                     <p className="text-[10px] text-gray-500">{d.date}</p>
                   </div>
                 </div>

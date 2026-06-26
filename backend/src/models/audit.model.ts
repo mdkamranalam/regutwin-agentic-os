@@ -51,15 +51,13 @@ const AuditSchema = new Schema<IAudit>(
 );
 
 // Cryptographic hash generation on creation if evidenceText is provided
-AuditSchema.pre("save", function (next) {
+AuditSchema.pre("save", async function () {
   if (!this.isNew) {
-    const err = new Error("🚨 Cryptographic Evidence Vault: Audit logs are strictly WORM (Write Once Read Many) and immutable.");
-    return next(err);
+    throw new Error("🚨 Cryptographic Evidence Vault: Audit logs are strictly WORM (Write Once Read Many) and immutable.");
   }
   if (this.evidenceText && !this.evidenceHash) {
     this.evidenceHash = crypto.createHash("sha256").update(this.evidenceText).digest("hex");
   }
-  next();
 });
 
 AuditSchema.pre("findOneAndUpdate", function () {
