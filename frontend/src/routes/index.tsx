@@ -11,6 +11,10 @@ import ExecutiveDashboard from '../pages/Dashboard/ExecutiveDashboard';
 import LandingPage from '../pages/Landing/LandingPage';
 import ConflictsPage from '../pages/Conflicts/ConflictsPage';
 import ReportsPage from '../pages/Reports/ReportsPage';
+import WatchmanConsole from '../pages/Agents/WatchmanConsole';
+import AnalystConsole from '../pages/Agents/AnalystConsole';
+import ValidatorConsole from '../pages/Agents/ValidatorConsole';
+import SettingsPage from '../pages/Settings/SettingsPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 /* ============================================
@@ -42,13 +46,13 @@ export const router = createBrowserRouter([
           { path: 'dashboard', element: <ExecutiveDashboard /> },
           { path: 'upload', element: <UploadPage /> },
           { path: 'explorer', element: <UploadPage /> },
-          { path: 'agents/watchman', element: <UploadPage /> },
-          { path: 'agents/analyst', element: <RegulationsPage /> },
+          { path: 'agents/watchman', element: <WatchmanConsole /> },
+          { path: 'agents/analyst', element: <AnalystConsole /> },
           { path: 'agents/conflict', element: <ConflictsPage /> },
-          { path: 'agents/validator', element: <MapDashboard /> },
+          { path: 'agents/validator', element: <ValidatorConsole /> },
           { path: 'reviews', element: <MapDashboard /> },
           { path: 'reports', element: <ReportsPage /> },
-          { path: 'settings', element: <ExecutiveDashboard /> },
+          { path: 'settings', element: <SettingsPage /> },
           { path: 'maps', element: <MapDashboard /> },
           { path: 'regulations', element: <RegulationsPage /> },
           { path: 'audits', element: <AuditDashboard /> },
