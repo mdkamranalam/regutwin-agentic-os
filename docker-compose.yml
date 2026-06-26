@@ -1,5 +1,25 @@
-
 services:
+  # ─── MongoDB ──────────────────────────────────────────────────────────────
+  mongodb:
+    image: mongo:7-jammy
+    container_name: regutwin-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: regutwin
+    networks:
+      - regutwin-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ─── Frontend ─────────────────────────────────────────────────────────────
   frontend:
     build:
       context: ./frontend
@@ -7,9 +27,15 @@ services:
       - "5173:80"
     depends_on:
       - backend
+    environment:
+      - VITE_API_URL=http://localhost:8000/api/v1
+      - VITE_SOCKET_URL=http://localhost:8000
+      - VITE_DEMO_MODE=${DEMO_MODE:-false}
     networks:
       - regutwin-network
+    restart: unless-stopped
 
+  # ─── Backend ──────────────────────────────────────────────────────────────
   backend:
     build:
       context: ./backend
@@ -21,24 +47,61 @@ services:
       - NODE_ENV=production
       - FRONTEND_URL=http://localhost:5173
       - AI_SERVICE_URL=http://ai:8001
+      - MONGO_URI=mongodb://mongodb:27017/regutwin
+      - INTERNAL_SECRET=${INTERNAL_SECRET:-regutwin_internal_secret_2026}
+      - DEMO_MODE=${DEMO_MODE:-false}
     depends_on:
-      - ai
+      mongodb:
+        condition: service_healthy
+      ai:
+        condition: service_started
     networks:
       - regutwin-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
+  # ─── AI Layer ─────────────────────────────────────────────────────────────
   ai:
     build:
       context: ./ai
     ports:
       - "8001:8001"
     environment:
+      # LLM Provider — set to 'gemini' for cloud demo, 'ollama' for local
+      - LLM_PROVIDER=${LLM_PROVIDER:-ollama}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-1.5-flash}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      # Ollama (only needed when LLM_PROVIDER=ollama)
       - OLLAMA_BASE_URL=http://host.docker.internal:11434
-      - OLLAMA_MODEL=llama3.1:8b
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.1:8b}
+      # Backend URL for watchman to trigger ingestion
       - BACKEND_URL=http://backend:8000/api/v1
+      - INTERNAL_SECRET=${INTERNAL_SECRET:-regutwin_internal_secret_2026}
+      # Demo mode — skips initial web scrape on startup
+      - DEMO_MODE=${DEMO_MODE:-false}
+      # Scraping interval (minutes)
+      - SCRAPE_INTERVAL_MINUTES=${SCRAPE_INTERVAL_MINUTES:-30}
+      # Upload folder (must match backend)
+      - UPLOADS_FOLDER=/app/uploads/regulations
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - regulation_uploads:/app/uploads/regulations
+      - chroma_data:/app/chroma_data
     networks:
       - regutwin-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  regulation_uploads:
+  chroma_data:
 
 networks:
   regutwin-network:
