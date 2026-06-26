@@ -9,6 +9,8 @@ import MapDashboard from '../pages/MAPs/MapDashboard';
 import AuditDashboard from '../pages/Governance/AuditDashboard';
 import ExecutiveDashboard from '../pages/Dashboard/ExecutiveDashboard';
 import LandingPage from '../pages/Landing/LandingPage';
+import ConflictsPage from '../pages/Conflicts/ConflictsPage';
+import ReportsPage from '../pages/Reports/ReportsPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 /* ============================================
@@ -42,15 +44,16 @@ export const router = createBrowserRouter([
           { path: 'explorer', element: <UploadPage /> },
           { path: 'agents/watchman', element: <UploadPage /> },
           { path: 'agents/analyst', element: <RegulationsPage /> },
-          { path: 'agents/conflict', element: <RegulationsPage /> },
+          { path: 'agents/conflict', element: <ConflictsPage /> },
           { path: 'agents/validator', element: <MapDashboard /> },
           { path: 'reviews', element: <MapDashboard /> },
-          { path: 'reports', element: <AuditDashboard /> },
+          { path: 'reports', element: <ReportsPage /> },
           { path: 'settings', element: <ExecutiveDashboard /> },
           { path: 'maps', element: <MapDashboard /> },
           { path: 'regulations', element: <RegulationsPage /> },
           { path: 'audits', element: <AuditDashboard /> },
           { path: 'validation', element: <MapDashboard /> },
+          { path: 'conflicts', element: <ConflictsPage /> },
         ]
       }
     ],

@@ -10,6 +10,11 @@ interface MAP {
   actionRequired: string;
   targetApiEndpoint?: string;
   testConfig?: any;
+  priority?: string;
+  riskLevel?: string;
+  acceptanceCriteria?: string;
+  validationMethod?: string;
+  deadline?: string;
   regulationId: {
     _id: string;
     title: string;
@@ -161,6 +166,16 @@ export default function MapDashboard() {
                       >
                         🏢 {map.assignedTo}
                       </span>
+                      {map.priority && (
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${map.priority === 'Critical' ? 'bg-red-500/20 text-red-300 border-red-500/30' : map.priority === 'High' ? 'bg-orange-500/20 text-orange-300 border-orange-500/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30'}`}>
+                          ⚡ {map.priority}
+                        </span>
+                      )}
+                      {map.validationMethod && (
+                        <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
+                          🔬 {map.validationMethod}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -184,9 +199,16 @@ export default function MapDashboard() {
                 </div>
 
                 {map.description && (
-                  <p className="text-sm mb-4 leading-relaxed text-white/50">
+                  <p className="text-sm mb-3 leading-relaxed text-white/50">
                     {map.description}
                   </p>
+                )}
+
+                {map.acceptanceCriteria && (
+                  <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/20 p-3 mb-4">
+                    <p className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1">🎯 Measurable Acceptance Criteria</p>
+                    <p className="text-xs text-gray-300 font-mono leading-relaxed">{map.acceptanceCriteria}</p>
+                  </div>
                 )}
 
                 <ApiTestConfigurator

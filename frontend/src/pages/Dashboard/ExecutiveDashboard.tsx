@@ -30,6 +30,20 @@ export default function ExecutiveDashboard() {
   const [sectorImpact, setSectorImpact] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [runningDemo, setRunningDemo] = useState(false);
+
+  const handleRunDemo = async () => {
+    setRunningDemo(true);
+    try {
+      const res = await api.post('/demo/seed');
+      alert(res.data?.message || 'Demo seeding complete.');
+      fetchHealth();
+    } catch (e: any) {
+      alert(e.response?.data?.error || 'Ensure DEMO_MODE=true in backend .env.');
+    } finally {
+      setRunningDemo(false);
+    }
+  };
 
   const fetchHealth = async () => {
     try {
@@ -72,29 +86,13 @@ export default function ExecutiveDashboard() {
   }
 
   const safeData = data || {
-    healthScore: 85,
+    healthScore: 100,
     activeRegulationsCount: 0,
-    metrics: { total: 124, open: 12, inProgress: 45, inReview: 18, closed: 49, overdue: 0 }
+    metrics: { total: 0, open: 0, inProgress: 0, inReview: 0, closed: 0, overdue: 0 }
   };
 
-  const fallbackTrendData = [
-    { day: 'Mon', risk: 45, compliance: 80 },
-    { day: 'Tue', risk: 42, compliance: 82 },
-    { day: 'Wed', risk: 50, compliance: 75 },
-    { day: 'Thu', risk: 38, compliance: 85 },
-    { day: 'Fri', risk: 30, compliance: 88 },
-    { day: 'Sat', risk: 28, compliance: 90 },
-    { day: 'Sun', risk: 25, compliance: 92 },
-  ];
-  const activeTrendData = riskTrend.length > 0 ? riskTrend : fallbackTrendData;
-
-  const fallbackImpactData = [
-    { name: 'Data Privacy', value: 35 },
-    { name: 'AML/KYC', value: 45 },
-    { name: 'Capital Markets', value: 10 },
-    { name: 'Consumer Prot.', value: 10 },
-  ];
-  const activeImpactData = sectorImpact.length > 0 ? sectorImpact : fallbackImpactData;
+  const activeTrendData = riskTrend.length > 0 ? riskTrend : [];
+  const activeImpactData = sectorImpact.length > 0 ? sectorImpact : [];
 
   const PIE_COLORS = ['#10B981', '#06B6D4', '#8B5CF6', '#F59E0B', '#EF4444'];
 
@@ -105,11 +103,6 @@ export default function ExecutiveDashboard() {
     audit: ShieldCheck
   };
 
-  const fallbackDeadlines = [
-    { id: '1', task: 'SEBI Reporting', date: 'Tomorrow, 5:00 PM', priority: 'Critical' },
-    { id: '2', task: 'AML Audit Response', date: 'June 28, 2026', priority: 'High' },
-    { id: '3', task: 'Quarterly Risk Review', date: 'July 02, 2026', priority: 'Medium' },
-  ];
   const activeDeadlines = upcomingList.length > 0
     ? upcomingList.slice(0, 3).map(u => ({
         id: u._id,
@@ -117,7 +110,7 @@ export default function ExecutiveDashboard() {
         date: u.deadline ? new Date(u.deadline).toLocaleDateString() : 'No specific deadline',
         priority: u.assignedTo === 'Risk' ? 'Critical' : u.assignedTo === 'IT Security' ? 'High' : 'Medium'
       }))
-    : fallbackDeadlines;
+    : [];
 
   return (
     <motion.div
@@ -150,6 +143,15 @@ export default function ExecutiveDashboard() {
             <p className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Active Regs</p>
             <p className="text-xs text-white font-bold">{safeData.activeRegulationsCount ?? 0}</p>
           </div>
+          <div className="h-8 w-px bg-white/10" />
+          <button
+            onClick={handleRunDemo}
+            disabled={runningDemo}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-zinc-950 font-black text-xs shadow-lg shadow-emerald-500/20 flex items-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
+          >
+            <RefreshCw size={13} className={runningDemo ? 'animate-spin' : ''} />
+            <span>{runningDemo ? 'Seeding Hackathon Demo...' : '🚀 Seed Hackathon Demo'}</span>
+          </button>
         </div>
       </div>
 

@@ -23,6 +23,7 @@ const NAV_GROUPS = [
       { label: 'Upload Regulations', path: '/upload', icon: UploadCloud },
       { label: 'Regulations Library', path: '/regulations', icon: Library },
       { label: 'MAP Tasks', path: '/maps', icon: ListTodo },
+      { label: 'Conflicts Registry', path: '/conflicts', icon: Zap },
       { label: 'Reviews', path: '/reviews', icon: ClipboardCheck },
     ]
   },
