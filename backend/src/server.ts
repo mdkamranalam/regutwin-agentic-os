@@ -4,6 +4,7 @@ import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
 
 import { initSocket } from "./utils/socket.js";
+import { initScheduler } from "./modules/scheduler.js";
 
 const startServer = async (): Promise<void> => {
   await connectDB();
@@ -14,6 +15,9 @@ const startServer = async (): Promise<void> => {
 
   // Initialize Socket.io
   initSocket(server);
+
+  // Initialize SLA & Deadline Scheduler (Phase 11)
+  initScheduler();
 };
 
 startServer();

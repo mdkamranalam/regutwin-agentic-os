@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import crypto from "crypto";
 
 export interface IAudit extends Document {
   mapId: mongoose.Types.ObjectId;
@@ -7,6 +8,8 @@ export interface IAudit extends Document {
   previousStatus?: string;
   newStatus?: string;
   evidenceText?: string;
+  evidenceHash?: string;
+  evidenceFilePath?: string;
   validationResult?: {
     is_valid: boolean;
     confidence: number;
@@ -34,6 +37,8 @@ const AuditSchema = new Schema<IAudit>(
     previousStatus: String,
     newStatus: String,
     evidenceText: String,
+    evidenceHash: String,
+    evidenceFilePath: String,
     validationResult: {
       is_valid: Boolean,
       confidence: Number,
@@ -44,5 +49,25 @@ const AuditSchema = new Schema<IAudit>(
     timestamps: true,
   }
 );
+
+// Cryptographic hash generation on creation if evidenceText is provided
+AuditSchema.pre("save", function (next) {
+  if (!this.isNew) {
+    const err = new Error("🚨 Cryptographic Evidence Vault: Audit logs are strictly WORM (Write Once Read Many) and immutable.");
+    return next(err);
+  }
+  if (this.evidenceText && !this.evidenceHash) {
+    this.evidenceHash = crypto.createHash("sha256").update(this.evidenceText).digest("hex");
+  }
+  next();
+});
+
+AuditSchema.pre("findOneAndUpdate", function () {
+  throw new Error("🚨 Tamper Detection: Audit Trail records cannot be modified.");
+});
+
+AuditSchema.pre("findOneAndDelete", function () {
+  throw new Error("🚨 Tamper Detection: Audit Trail records cannot be deleted.");
+});
 
 export default mongoose.model<IAudit>("Audit", AuditSchema);

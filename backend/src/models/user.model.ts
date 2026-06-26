@@ -12,6 +12,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
+  department: string;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -36,6 +37,11 @@ const UserSchema = new Schema<IUser>(
       type: String,
       enum: Object.values(UserRole),
       default: UserRole.COMPLIANCE,
+    },
+
+    department: {
+      type: String,
+      default: "Compliance",
     },
   },
   {

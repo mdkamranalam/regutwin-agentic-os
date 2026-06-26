@@ -14,6 +14,7 @@ const NAV_GROUPS = [
     title: 'Overview',
     items: [
       { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+      { label: 'Explorer', path: '/explorer', icon: Search },
     ]
   },
   {
@@ -157,7 +158,28 @@ export default function DashboardLayout() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {/* Phase 12 Multi-Tenancy Role Switcher */}
+            <div className="flex items-center gap-1.5 bg-black/60 border border-white/10 rounded-xl px-2.5 py-1">
+              <span className="text-[10px] uppercase font-bold text-slate-500">Scope:</span>
+              <select
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const [role, dept] = val.split(':');
+                  localStorage.setItem('user', JSON.stringify({ name: `${dept} Manager`, role, department: dept }));
+                  window.dispatchEvent(new Event('tenant_switched'));
+                }}
+                defaultValue="ADMIN:All"
+                className="bg-transparent text-xs font-bold text-emerald-400 focus:outline-none cursor-pointer"
+              >
+                <option value="ADMIN:All" className="bg-zinc-900 text-white">👑 Admin (All Depts)</option>
+                <option value="MANAGER:IT Security" className="bg-zinc-900 text-white">🛡️ IT Security Manager</option>
+                <option value="MANAGER:Risk" className="bg-zinc-900 text-white">⚖️ Risk Officer</option>
+                <option value="MANAGER:Legal" className="bg-zinc-900 text-white">📜 Legal Counsel</option>
+                <option value="COMPLIANCE:Compliance" className="bg-zinc-900 text-white">📋 Compliance Specialist</option>
+              </select>
+            </div>
+
             {/* AI Assistant Button */}
             <button className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold border border-indigo-500/20 hover:bg-indigo-500/20 transition-colors">
               <Bot size={14} />

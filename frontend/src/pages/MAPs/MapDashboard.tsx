@@ -22,6 +22,7 @@ const STATUS_CONFIG: Record<string, { color: string; bg: string; label: string }
   IN_PROGRESS: { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)',  label: 'In Progress' },
   IN_REVIEW:   { color: '#3b82f6', bg: 'rgba(59,130,246,0.1)',  label: 'In Review' },
   CLOSED:      { color: '#10b981', bg: 'rgba(16,185,129,0.1)',  label: 'Closed' },
+  OVERDUE:     { color: '#ef4444', bg: 'rgba(239,68,68,0.3)',   label: '🚨 Overdue' },
 };
 
 function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
@@ -49,18 +50,31 @@ export default function MapDashboard() {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  useEffect(() => {
-    const fetchMaps = async () => {
-      try {
-        const response = await api.get('/maps');
-        setMaps(response.data);
-      } catch (error) {
-        console.error('Failed to fetch MAPs', error);
-      } finally {
-        setLoading(false);
+  const fetchMaps = async () => {
+    try {
+      const userStr = localStorage.getItem('user');
+      let query = '';
+      if (userStr) {
+        try {
+          const u = JSON.parse(userStr);
+          if (u.role !== 'ADMIN' && u.department && u.department !== 'All') {
+            query = `?department=${u.department}`;
+          }
+        } catch(e) {}
       }
-    };
+      const response = await api.get(`/maps${query}`);
+      setMaps(response.data);
+    } catch (error) {
+      console.error('Failed to fetch MAPs', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchMaps();
+    window.addEventListener('tenant_switched', fetchMaps);
+    return () => window.removeEventListener('tenant_switched', fetchMaps);
   }, []);
 
   const handleStatusChange = async (id: string, newStatus: string) => {

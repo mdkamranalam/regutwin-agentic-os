@@ -5,6 +5,7 @@ export enum MapStatus {
   IN_PROGRESS = "IN_PROGRESS",
   IN_REVIEW = "IN_REVIEW",
   CLOSED = "CLOSED",
+  OVERDUE = "OVERDUE",
 }
 
 export enum MapDepartment {
@@ -22,6 +23,7 @@ export interface IMap extends Document {
   actionRequired: string;
   status: MapStatus;
   deadline?: Date;
+  slaBreachCount: number;
   targetApiEndpoint?: string;
   testConfig?: {
     method: string;
@@ -54,6 +56,10 @@ const MapSchema = new Schema<IMap>(
     },
     deadline: {
       type: Date,
+    },
+    slaBreachCount: {
+      type: Number,
+      default: 0,
     },
     actionRequired: {
       type: String,

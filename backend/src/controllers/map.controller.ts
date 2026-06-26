@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import fs from "fs";
+import crypto from "crypto";
 import MAP from "../models/map.model.js";
 import Audit from "../models/audit.model.js";
 import { AIService } from "../services/ai.service.js";
@@ -21,8 +23,8 @@ export const createMap = async (req: Request, res: Response) => {
 export const getMaps = async (req: Request, res: Response) => {
   try {
     const { department, regulationId } = req.query;
-    const filter: any = {};
-    if (department) filter.assignedTo = department;
+    const filter: any = { ...(req as any).departmentFilter };
+    if (department && department !== "All") filter.assignedTo = department;
     if (regulationId) filter.regulationId = regulationId;
 
     const maps = await MAP.find(filter).populate("regulationId", "title source");
@@ -105,9 +107,21 @@ export const deleteMap = async (req: Request, res: Response) => {
   }
 };
 
-export const validateMap = async (req: Request, res: Response) => {
+export const validateMap = async (req: any, res: Response) => {
   try {
-    const { evidenceText } = req.body;
+    let { evidenceText } = req.body;
+    let filePath = undefined;
+    let hash = undefined;
+
+    if (req.file) {
+      filePath = req.file.path;
+      const fileBuffer = fs.readFileSync(filePath);
+      hash = crypto.createHash("sha256").update(fileBuffer).digest("hex");
+      if (!evidenceText) evidenceText = `Cryptographic Vault Document: ${req.file.originalname}`;
+    } else if (evidenceText) {
+      hash = crypto.createHash("sha256").update(evidenceText).digest("hex");
+    }
+
     const map = await MAP.findById(req.params.id);
     if (!map) {
       return res.status(404).json({ error: "MAP not found" });
@@ -126,10 +140,9 @@ export const validateMap = async (req: Request, res: Response) => {
       map.status = "CLOSED" as any;
       await map.save();
     } else {
-      map.status = "OPEN" as any; // Reopen the ticket
+      map.status = "OPEN" as any;
       await map.save();
       
-      // Phase 7: Alert managers
       import("../services/notification.service.js").then(({ NotificationService }) => {
         NotificationService.sendAlert(
           map.assignedTo,
@@ -139,17 +152,19 @@ export const validateMap = async (req: Request, res: Response) => {
       });
     }
 
-    await Audit.create({
+    const auditLog = await Audit.create({
       mapId: map._id,
       regulationId: map.regulationId,
       action: "VALIDATED",
       previousStatus,
       newStatus: map.status,
       evidenceText,
+      evidenceHash: hash,
+      evidenceFilePath: filePath,
       validationResult,
     });
 
-    res.json({ map, validationResult });
+    res.json({ map, validationResult, vaultHash: hash, auditId: auditLog._id });
   } catch (error) {
     res.status(500).json({ error: "Validation failed" });
   }

@@ -39,10 +39,18 @@ export const router = createBrowserRouter([
         children: [
           { path: 'dashboard', element: <ExecutiveDashboard /> },
           { path: 'upload', element: <UploadPage /> },
+          { path: 'explorer', element: <UploadPage /> },
+          { path: 'agents/watchman', element: <UploadPage /> },
+          { path: 'agents/analyst', element: <RegulationsPage /> },
+          { path: 'agents/conflict', element: <RegulationsPage /> },
+          { path: 'agents/validator', element: <MapDashboard /> },
+          { path: 'reviews', element: <MapDashboard /> },
+          { path: 'reports', element: <AuditDashboard /> },
+          { path: 'settings', element: <ExecutiveDashboard /> },
           { path: 'maps', element: <MapDashboard /> },
           { path: 'regulations', element: <RegulationsPage /> },
           { path: 'audits', element: <AuditDashboard /> },
-          { path: 'validation', element: <PlaceholderPage title="Validation" message="Validation results will be built here." /> },
+          { path: 'validation', element: <MapDashboard /> },
         ]
       }
     ],
