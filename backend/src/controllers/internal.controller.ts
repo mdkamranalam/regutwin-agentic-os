@@ -84,44 +84,55 @@ export const approveWorkflow = async (req: Request, res: Response) => {
     // If maps were returned, persist them in the backend
     const { maps } = aiResponse.data;
     if (maps && maps.maps) {
-      const { default: MAP, MapStatus, MapDepartment } = await import("../models/map.model.js");
+      const { default: MAP, MapStatus, MapPriority, ValidationMethod } = await import("../models/map.model.js");
+      const { default: Audit } = await import("../models/audit.model.js");
+
       for (const m of maps.maps) {
+        // Normalize department
+        const raw = (m.assignedTo || "").toLowerCase().trim().replace(/[^a-z\s]/g, "");
         let assignedTo = "Compliance";
-        if (m.assignedTo) {
-          const norm = m.assignedTo.toLowerCase().trim().replace(/[^a-z]/g, "");
-          if (norm === "itsecurity" || norm === "it" || norm === "security") {
-            assignedTo = "IT Security";
-          } else if (norm === "risk") {
-            assignedTo = "Risk";
-          } else if (norm === "legal") {
-            assignedTo = "Legal";
-          } else if (norm === "compliance") {
-            assignedTo = "Compliance";
-          } else if (norm === "finance") {
-            assignedTo = "Finance";
-          }
-        }
+        if (raw.includes("it") || raw.includes("security")) assignedTo = "IT Security";
+        else if (raw.includes("risk")) assignedTo = "Risk";
+        else if (raw.includes("legal")) assignedTo = "Legal";
+        else if (raw.includes("finance")) assignedTo = "Finance";
 
         const actionRequired = m.actionRequired || m.action_required || m.description || "Review Regulatory Requirement";
-        const description = m.description || m.actionRequired || m.action_required || "Review Regulatory Requirement";
+        const description = m.description || actionRequired;
         const parsedDate = m.deadline ? new Date(m.deadline) : null;
-        const deadline = (parsedDate && !isNaN(parsedDate.getTime())) ? parsedDate : new Date(Date.now() + 48 * 3600 * 1000);
+        const deadline = (parsedDate && !isNaN(parsedDate.getTime())) ? parsedDate : new Date(Date.now() + 72 * 3600 * 1000);
+
+        // Normalize priority
+        const rawPriority = (m.priority || "").toLowerCase();
+        const priority = rawPriority.includes("critical") ? MapPriority.CRITICAL
+          : rawPriority.includes("high") ? MapPriority.HIGH
+          : rawPriority.includes("low") ? MapPriority.LOW
+          : MapPriority.MEDIUM;
+
+        // Normalize validation method
+        const rawMethod = (m.validation_method || m.validationMethod || "").toUpperCase().replace(/[^A-Z_]/g, "");
+        const allMethods = Object.values(ValidationMethod) as string[];
+        const validationMethod = allMethods.includes(rawMethod) ? rawMethod : ValidationMethod.EVIDENCE_REVIEW;
 
         const createdMap = await MAP.create({
-          regulationId, // Note: may be a UUID from HITL path — handled gracefully
+          regulationId,
           description,
           assignedTo,
           actionRequired,
           status: MapStatus.OPEN,
-          deadline
+          priority,
+          riskLevel: priority,
+          deadline,
+          acceptanceCriteria: m.acceptance_criteria || m.acceptanceCriteria || "Task must be completed and evidence submitted.",
+          validationMethod,
+          successThreshold: m.success_threshold || m.successThreshold || "100% completion required.",
+          evidenceRequired: m.evidence_required || m.evidenceRequired || "Documented proof of implementation must be submitted.",
         });
 
-        const { default: Audit } = await import("../models/audit.model.js");
         await Audit.create({
           mapId: createdMap._id,
           regulationId,
           action: "CREATED",
-          newStatus: MapStatus.OPEN
+          newStatus: MapStatus.OPEN,
         });
       }
     }

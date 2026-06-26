@@ -5,6 +5,7 @@ import { logger } from "./config/logger.js";
 
 import { initSocket } from "./utils/socket.js";
 import { initScheduler } from "./modules/scheduler.js";
+import { initAutoValidator } from "./modules/auto_validator.js";
 
 const startServer = async (): Promise<void> => {
   await connectDB();
@@ -18,6 +19,10 @@ const startServer = async (): Promise<void> => {
 
   // Initialize SLA & Deadline Scheduler (Phase 11)
   initScheduler();
+
+  // Initialize Autonomous Validation Engine (Phase 3)
+  initAutoValidator();
 };
 
 startServer();
+

@@ -5,8 +5,9 @@ import { env } from "../config/env.js";
 
 export const authenticate = (req: any, res: Response, next: NextFunction) => {
   const internalSecret = req.headers["x-internal-secret"];
-  if (internalSecret && internalSecret === (process.env.INTERNAL_SECRET || "regutwin_secret_key")) {
-    req.user = { id: "system", role: "system" };
+  const expectedSecret = process.env.INTERNAL_SECRET;
+  if (expectedSecret && internalSecret && internalSecret === expectedSecret) {
+    req.user = { id: "system", role: "ADMIN" };
     return next();
   }
 
