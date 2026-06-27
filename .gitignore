@@ -1,48 +1,65 @@
 # ==========================================
-# OS Files
+# OS & System Files
 # ==========================================
 .DS_Store
 Thumbs.db
 desktop.ini
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.temp
 
 # ==========================================
 # IDEs & Editors
 # ==========================================
 .idea/
-.vscode/
-*.swp
-*.swo
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.claude/
+.cursor/
 
 # ==========================================
-# Environment Variables
+# Environment Variables & Secrets
 # ==========================================
 .env
 .env.*
 !.env.example
 !.env.template
+secrets/
+credentials.json
+service-account.json
+*.pem
+*.key
 
 # ==========================================
-# Python (Global)
+# Global Python & AI Layer
 # ==========================================
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 
 # Virtual Environments
-.venv/
 venv/
+.venv/
 env/
 ENV/
+ai/venv/
+ai/.venv/
 
-# Python Tooling
+# Python Tooling & Testing
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .pyre/
 .tox/
 .nox/
-
-# Coverage
 .coverage
 htmlcov/
 coverage/
@@ -53,14 +70,10 @@ dist/
 *.egg-info/
 .eggs/
 
-# Jupyter
+# Jupyter Notebooks
 .ipynb_checkpoints/
 
-# ==========================================
-# AI
-# ==========================================
-ai/venv/
-ai/.venv/
+# AI Models, Checkpoints & Vector DBs
 ai/models/
 ai/checkpoints/
 ai/weights/
@@ -68,21 +81,18 @@ ai/outputs/
 ai/generated/
 ai/artifacts/
 ai/cache/
-
-# Vector Databases
 ai/chroma/
 ai/chromadb/
 ai/vector_store/
 ai/vectordb/
 ai/faiss_index/
 ai/storage/
-
-# LangGraph
 ai/.langgraph/
 ai/state/
 ai/memory/
+chroma_data/
 
-# Model Files
+# Large Model Files
 *.pt
 *.pth
 *.ckpt
@@ -96,55 +106,47 @@ ai/memory/
 *.sqlite
 *.sqlite3
 
+# Tool Generated Cache
+graphify-out/
+.graphify*
+
 # ==========================================
-# Backend
+# Backend (Node.js / Express)
 # ==========================================
+backend/node_modules/
+backend/dist/
+backend/build/
 backend/logs/
 backend/uploads/
 backend/tmp/
 backend/temp/
+backend/*.pid
+backend/*.seed
+backend/*.pid.lock
 
 # ==========================================
-# Frontend (Node.js / Next.js)
+# Frontend (React / Vite)
 # ==========================================
 frontend/node_modules/
-frontend/.next/
-frontend/out/
-frontend/build/
 frontend/dist/
+frontend/dist-ssr/
 frontend/.cache/
 frontend/.turbo/
 
+# ==========================================
 # Package Manager Logs
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
-frontend/pnpm-debug.log*
+# ==========================================
+node_modules/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # ==========================================
-# Docker
+# Docker & Orchestration
 # ==========================================
 docker-compose.override.yml
 *.pid
-
-# ==========================================
-# Logs
-# ==========================================
-logs/
-*.log
-
-# ==========================================
-# Secrets
-# ==========================================
-secrets/
-credentials.json
-service-account.json
-*.pem
-*.key
-
-# ==========================================
-# Temporary Files
-# ==========================================
-*.tmp
-*.temp
-*.bak

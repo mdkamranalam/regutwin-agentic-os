@@ -1,4 +1,10 @@
-# ReguTwin AI Layer
+# 🤖 ReguTwin AI Swarm Layer
+
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph%20%7C%20LangChain-1C3C3C.svg)](https://langchain-ai.github.io/langgraph/)
+[![ChromaDB](https://img.shields.io/badge/Vector%20Store-ChromaDB-FF6F00.svg)](https://www.trychroma.com/)
+[![LLM Support](https://img.shields.io/badge/LLMs-Llama%203.1%208B%20%7C%20Gemini%201.5%20%7C%20OpenAI-412991.svg)](main.py)
 
 ## Introduction
 
@@ -102,7 +108,7 @@ Many AI systems depend heavily on commercial APIs. While these services are powe
 
 ReguTwin is designed around open-source models whenever possible.
 
-The primary reasoning model is expected to be a Qwen family model running through Ollama.
+The primary open-weights reasoning model is **Llama 3.1 8B** running locally via Ollama, with pluggable support for cloud providers like **Google Gemini 1.5 Flash** and **OpenAI GPT-4o** via the `LLM_PROVIDER` environment variable.
 
 This approach provides several advantages.
 
