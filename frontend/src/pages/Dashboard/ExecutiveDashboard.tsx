@@ -155,6 +155,28 @@ export default function ExecutiveDashboard() {
         </div>
       </div>
 
+      {/* Self-Guiding Demo Banner — only shown when the DB is fresh/empty */}
+      {safeData.activeRegulationsCount === 0 && !runningDemo && (
+        <div className="p-5 rounded-2xl bg-gradient-to-r from-indigo-500/10 to-emerald-500/10 border border-indigo-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0 text-xl">
+              🚀
+            </div>
+            <div>
+              <p className="text-white font-extrabold text-sm">Ready to Demo? Seed the Hackathon Pipeline</p>
+              <p className="text-xs text-gray-400 mt-0.5 max-w-lg">
+                Click <span className="text-emerald-400 font-bold">🚀 Seed Hackathon Demo</span> (top right) to instantly ingest 3 live RBI &amp; SEBI regulations,
+                trigger the full AI agent swarm, generate Measurable Action Points, and surface a
+                <span className="text-red-400 font-bold"> Critical Regulatory Conflict</span> between RBI's 30s and SEBI's 60s session timeout mandates.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-2 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">DEMO_MODE=ON</span>
+          </div>
+        </div>
+      )}
+
       {/* Phase 11 SLA Breach Ticker Banner */}
       {((safeData.metrics as any).overdue > 0) && (
         <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/30 flex items-center justify-between text-red-400 animate-alert-pulse">

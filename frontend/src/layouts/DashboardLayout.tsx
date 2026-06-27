@@ -152,10 +152,12 @@ export default function DashboardLayout() {
             >
               <Menu size={20} />
             </button>
-            <div className="hidden md:flex items-center gap-2 text-sm text-gray-400">
+          <div className="hidden md:flex items-center gap-2 text-sm text-gray-400">
               <span>Workspace</span>
               <span className="text-gray-600">/</span>
-              <span className="text-white font-medium">Dashboard</span>
+              <span className="text-white font-medium">
+                {NAV_GROUPS.flatMap(g => g.items).find(item => location.pathname === item.path || location.pathname.startsWith(item.path + '/'))?.label ?? 'Dashboard'}
+              </span>
             </div>
           </div>
 

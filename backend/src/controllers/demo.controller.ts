@@ -1,16 +1,132 @@
 import { Request, Response } from "express";
-import axios from "axios";
-import MAP from "../models/map.model.js";
+import MAP, { MapStatus, MapPriority, ValidationMethod } from "../models/map.model.js";
 import Regulation from "../models/regulation.model.js";
 import Audit from "../models/audit.model.js";
 
-const AI_URL = process.env.AI_SERVICE_URL || "http://localhost:8001";
 const IS_DEMO = process.env.DEMO_MODE === "true";
+
+// ─── Internal helpers (mirrors regulation.controller.ts logic) ────────────────
+
+function normalizeDepartment(raw: string | undefined): string {
+  if (!raw) return "Compliance";
+  const norm = raw.toLowerCase().trim().replace(/[^a-z\s]/g, "");
+  if (norm.includes("it") || norm.includes("security") || norm.includes("tech")) return "IT Security";
+  if (norm.includes("risk")) return "Risk";
+  if (norm.includes("legal")) return "Legal";
+  if (norm.includes("compliance")) return "Compliance";
+  if (norm.includes("finance") || norm.includes("financial")) return "Finance";
+  return "Compliance";
+}
+
+function normalizePriority(raw: string | undefined): string {
+  if (!raw) return MapPriority.MEDIUM;
+  const p = raw.toLowerCase();
+  if (p.includes("critical")) return MapPriority.CRITICAL;
+  if (p.includes("high")) return MapPriority.HIGH;
+  if (p.includes("low")) return MapPriority.LOW;
+  return MapPriority.MEDIUM;
+}
+
+function normalizeValidationMethod(raw: string | undefined): string {
+  if (!raw) return ValidationMethod.EVIDENCE_REVIEW;
+  const v = raw.toUpperCase().replace(/[^A-Z_]/g, "");
+  if (Object.values(ValidationMethod).includes(v as ValidationMethod)) return v;
+  return ValidationMethod.EVIDENCE_REVIEW;
+}
+
+function parseDeadline(raw: string | undefined, defaultHours: number = 72): Date {
+  if (!raw) return new Date(Date.now() + defaultHours * 3600 * 1000);
+  const parsed = new Date(raw);
+  return !isNaN(parsed.getTime()) ? parsed : new Date(Date.now() + defaultHours * 3600 * 1000);
+}
+
+async function persistMapsFromWorkflow(workflowResult: any, regulationId: string) {
+  if (!workflowResult?.maps?.maps) return;
+  for (const m of workflowResult.maps.maps) {
+    const assignedTo = normalizeDepartment(m.assignedTo);
+    const actionRequired = m.actionRequired || m.action_required || m.description || "Review Regulatory Requirement";
+    const description = m.description || actionRequired;
+    const deadline = parseDeadline(m.deadline);
+    const priority = normalizePriority(m.priority);
+    const riskLevel = normalizePriority(m.risk_level || m.riskLevel || m.priority);
+    const acceptanceCriteria = m.acceptance_criteria || m.acceptanceCriteria || "Task must be completed and evidence submitted.";
+    const validationMethod = normalizeValidationMethod(m.validation_method || m.validationMethod);
+    const successThreshold = m.success_threshold || m.successThreshold || "100% completion required.";
+    const evidenceRequired = m.evidence_required || m.evidenceRequired || "Documented proof of implementation must be submitted.";
+
+    const createdMap = await MAP.create({
+      regulationId,
+      description,
+      assignedTo,
+      actionRequired,
+      status: MapStatus.OPEN,
+      priority,
+      riskLevel,
+      deadline,
+      acceptanceCriteria,
+      validationMethod,
+      successThreshold,
+      evidenceRequired,
+    });
+
+    await Audit.create({
+      mapId: createdMap._id,
+      regulationId,
+      action: "CREATED",
+      newStatus: MapStatus.OPEN,
+    });
+  }
+}
+
+/**
+ * Directly ingests regulation text in-process (no HTTP round-trip to localhost).
+ * This is the same logic as ingestRegulationUrl in regulation.controller.ts,
+ * but called as a function to avoid Docker loopback issues.
+ */
+async function ingestRegulationText(title: string, source: string, extractedText: string) {
+  let regulation = await Regulation.create({
+    title,
+    source,
+    filePath: "demo_seeded.txt",
+    extractedText,
+  });
+
+  try {
+    const { AIService } = await import("../services/ai.service.js");
+    const workflowResult = await AIService.runWorkflow(
+      regulation.id,
+      extractedText,
+      regulation.title,
+      regulation.source
+    );
+
+    regulation.analysis = workflowResult.analysis;
+
+    if (workflowResult.conflicts?.conflicts) {
+      regulation.conflicts = workflowResult.conflicts.conflicts.map((c: any) => ({
+        regulationId: c.conflicting_regulation_id,
+        title: c.conflicting_title,
+        explanation: c.explanation,
+      }));
+    }
+
+    regulation.status = "ANALYZED" as any;
+    await regulation.save();
+
+    await persistMapsFromWorkflow(workflowResult, regulation.id);
+  } catch (error) {
+    console.error("[Demo] AI Analysis failed, saving regulation as FAILED:", error);
+    regulation.status = "FAILED" as any;
+    await regulation.save();
+  }
+
+  return regulation;
+}
 
 /**
  * POST /demo/seed
  * Seeds the database with 3 realistic regulations that create conflicts
- * and trigger the full AI pipeline. Works on a fresh machine.
+ * and trigger the full AI pipeline. Works on a fresh machine and in Docker.
  */
 export const seedDemo = async (req: Request, res: Response) => {
   if (!IS_DEMO) {
@@ -19,7 +135,9 @@ export const seedDemo = async (req: Request, res: Response) => {
 
   try {
     // Check if already seeded
-    const existing = await Regulation.countDocuments({ source: { $in: ["Reserve Bank of India — Demo", "Securities and Exchange Board of India — Demo", "Internal Compliance Policy — Demo"] } });
+    const existing = await Regulation.countDocuments({
+      source: { $in: ["Reserve Bank of India — Demo", "Securities and Exchange Board of India — Demo", "Internal Compliance Policy — Demo"] }
+    });
     if (existing > 0) {
       return res.json({ message: "Demo data already seeded.", count: existing });
     }
@@ -30,20 +148,9 @@ export const seedDemo = async (req: Request, res: Response) => {
     for (const reg of demoRegulations) {
       try {
         console.log(`[Demo] Seeding regulation: ${reg.title}`);
-        const response = await axios.post(
-          `http://localhost:${process.env.PORT || 8000}/api/v1/regulations/ingest-url`,
-          {
-            title: reg.title,
-            source: reg.source,
-            url: null,
-            extractedText: reg.text,
-          },
-          {
-            headers: { Authorization: `Bearer ${req.headers.authorization?.split(" ")[1] || ""}` },
-            timeout: 300000, // 5 min — LLM processing can be slow
-          }
-        );
-        results.push({ title: reg.title, status: "seeded", id: response.data._id });
+        // Direct in-process call — no localhost network hop, works in Docker
+        const result = await ingestRegulationText(reg.title, reg.source, reg.text);
+        results.push({ title: reg.title, status: "seeded", id: result._id });
       } catch (err: any) {
         console.error(`[Demo] Failed to seed ${reg.title}:`, err.message);
         results.push({ title: reg.title, status: "failed", error: err.message });
