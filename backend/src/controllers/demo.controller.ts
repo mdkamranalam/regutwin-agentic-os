@@ -110,7 +110,9 @@ async function ingestRegulationText(title: string, source: string, extractedText
       }));
     }
 
-    regulation.status = "ANALYZED" as any;
+    if (regulation.status !== "FAILED" && regulation.status !== "AWAITING_APPROVAL") {
+      regulation.status = "ANALYZED" as any;
+    }
     await regulation.save();
 
     await persistMapsFromWorkflow(workflowResult, regulation.id);

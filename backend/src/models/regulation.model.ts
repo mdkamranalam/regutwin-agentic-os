@@ -5,6 +5,8 @@ export enum RegulationStatus {
   ANALYZED = "ANALYZED",
   MAPPED = "MAPPED",
   VALIDATED = "VALIDATED",
+  AWAITING_APPROVAL = "AWAITING_APPROVAL",
+  FAILED = "FAILED",
 }
 
 export interface IRegulation extends Document {

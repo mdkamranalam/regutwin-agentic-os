@@ -47,6 +47,7 @@ async function persistMapsFromWorkflow(
   workflowResult: any,
   regulationId: string,
 ) {
+  console.log("persistMapsFromWorkflow:", JSON.stringify(workflowResult?.maps));
   if (!workflowResult?.maps?.maps) return;
 
   for (const m of workflowResult.maps.maps) {
@@ -120,7 +121,9 @@ export const uploadRegulation = async (req: Request, res: Response) => {
       }));
     }
 
-    regulation.status = "ANALYZED" as any;
+    if (regulation.status !== "FAILED" && regulation.status !== "AWAITING_APPROVAL") {
+      regulation.status = "ANALYZED" as any;
+    }
     await regulation.save();
 
     await persistMapsFromWorkflow(workflowResult, regulation.id);
@@ -198,7 +201,9 @@ export const ingestRegulationUrl = async (req: Request, res: Response) => {
       }));
     }
 
-    regulation.status = "ANALYZED" as any;
+    if (regulation.status !== "FAILED" && regulation.status !== "AWAITING_APPROVAL") {
+      regulation.status = "ANALYZED" as any;
+    }
     await regulation.save();
 
     await persistMapsFromWorkflow(workflowResult, regulation.id);

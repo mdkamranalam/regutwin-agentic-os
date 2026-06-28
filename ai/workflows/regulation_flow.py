@@ -366,8 +366,6 @@ _checkpointer = MemorySaver()
 _workflow = _build_workflow()
 regulation_app = _workflow.compile(
     checkpointer=_checkpointer,
-    # Interrupt before await_approval so the graph truly pauses at the HITL gate
-    interrupt_before=["await_approval"],
 )
 
 
